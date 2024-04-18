@@ -33,13 +33,6 @@ lint--prettier:
 	@./node_modules/.bin/prettier . --check
 
 lint--eslint:
-	@echo 'checking eslint for fixable issues'
-	@./node_modules/.bin/eslint \
-		--cache-location ./.eslintcache \
-		--cache-strategy content \
-		--cache \
-		'./*.ts' lib tests \
-		--fix-dry-run
 	@echo 'checking eslint for all issues'
 	@./node_modules/.bin/eslint  \
 		--cache-location ./.eslintcache \
