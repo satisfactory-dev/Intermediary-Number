@@ -22,6 +22,7 @@ generate--post-build:
 		./generated-types/
 
 generate--post-docs-json:
+	@./node_modules/.bin/ts-node ./generate-faux-recipe-ingredient-list.ts
 	@make build
 
 lint--tsc:
