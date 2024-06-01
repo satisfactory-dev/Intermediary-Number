@@ -21,6 +21,7 @@ run({
 	files: (await glob(`${__dirname}/tests/**/*.spec.ts`)).filter(
 		maybe => (
 			!maybe.includes('Numbers.spec.ts')
+			&& !maybe.includes('IntermediaryNumber.spec.ts')
 		)
 	),
 	concurrency: true,
