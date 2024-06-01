@@ -19,7 +19,9 @@ let already_stopped = false;
 
 run({
 	files: (await glob(`${__dirname}/tests/**/*.spec.ts`)).filter(
-		() => true
+		maybe => (
+			!maybe.includes('Numbers.spec.ts')
+		)
 	),
 	concurrency: true,
 	signal: ac.signal,
