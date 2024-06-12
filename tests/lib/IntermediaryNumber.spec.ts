@@ -397,6 +397,19 @@ void describe('IntermediaryCalculation', () => {
 			)
 		})
 	})
+
+	void describe('max', () => {
+		void it('beahaves', () => {
+			assert.strictEqual(
+				(new IntermediaryCalculation(
+					IntermediaryNumber.One,
+					'+',
+					IntermediaryNumber.One,
+				)).max(3, 4, 5).toString(),
+				'5'
+			)
+		})
+	})
 })
 
 void describe('do_math', () => {
