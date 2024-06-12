@@ -558,15 +558,15 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 		const scientific = /^(-?\d+(?:\.\d+))e([+-])(\d+)$/.exec(maybe);
 
 		if (scientific) {
-				const calc = new IntermediaryCalculation(
-					IntermediaryNumber.Zero,
-					scientific[2] as '+'|'-',
-					IntermediaryNumber.create(scientific[3]),
-				).toBigNumber();
+			const calc = new IntermediaryCalculation(
+				IntermediaryNumber.Zero,
+				scientific[2] as '+'|'-',
+				IntermediaryNumber.create(scientific[3]),
+			).toBigNumber();
 
-				return IntermediaryNumber.create(scientific[1]).times(
-					(new BigNumber(10)).pow(calc)
-				);
+			return IntermediaryNumber.create(scientific[1]).times(
+				(new BigNumber(10)).pow(calc)
+			);
 		}
 
 		try {
