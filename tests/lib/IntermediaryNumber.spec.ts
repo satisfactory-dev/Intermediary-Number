@@ -376,6 +376,27 @@ void describe('IntermediaryCalculation', () => {
 			);
 		})
 	})
+
+	void describe('isGreaterThan', () => {
+		void it('behaves', () => {
+			assert.strictEqual(
+				(new IntermediaryCalculation(
+					IntermediaryNumber.One,
+					'+',
+					IntermediaryNumber.One,
+				)).isGreaterThan(2),
+				false
+			)
+			assert.strictEqual(
+				(new IntermediaryCalculation(
+					IntermediaryNumber.One,
+					'+',
+					IntermediaryNumber.One,
+				)).isGreaterThan(1),
+				true
+			)
+		})
+	})
 })
 
 void describe('do_math', () => {
