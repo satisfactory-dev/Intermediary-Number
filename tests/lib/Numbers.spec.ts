@@ -23,7 +23,6 @@ void describe('Math', () => {
 			['1', true],
 			['1.1', true],
 			['-1', {
-				property: '-1',
 				message: 'Not a supported amount string!',
 			}],
 		];
