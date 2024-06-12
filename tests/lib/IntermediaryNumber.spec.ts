@@ -182,6 +182,19 @@ void describe('IntermediaryNumber', () => {
 			)
 		}
 	})
+
+	void describe('toAmountString', () => {
+		void it('behaves', () => {
+			assert.strictEqual(
+				IntermediaryNumber.create('0.333333').toAmountString(),
+				'0.333333'
+			)
+			assert.strictEqual(
+				IntermediaryNumber.create(new Fraction(1/3)).toAmountString(),
+				'0.333334'
+			)
+		})
+	})
 });
 
 void describe('IntermediaryCalculation', () => {
