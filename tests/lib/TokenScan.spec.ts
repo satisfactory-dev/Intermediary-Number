@@ -153,7 +153,13 @@ void describe('TokenScan', () => {
 					JSON.stringify(input)
 				})).parsed throws`,
 				() => {
-					assert.throws(() => (new TokenScan(input)).parsed);
+					const scan = new TokenScan(input);
+
+					assert.throws(() => scan.parsed);
+					assert.strictEqual(
+						scan.valid,
+						false
+					);
 				}
 			)
 		}
@@ -170,6 +176,8 @@ void describe('TokenScan', () => {
 				`${raw_input_string}${random_ignore_string()}`,
 				`${random_ignore_string()}${raw_input_string}${random_ignore_string()}`,
 			]) {
+				const scan = new TokenScan(input_string);
+
 				if (undefined === expected_result_type) {
 					void it(
 						`(new TokenScan(${
@@ -177,7 +185,11 @@ void describe('TokenScan', () => {
 						})).parsed throws`,
 						() => {
 							assert.throws(
-								() => (new TokenScan(input_string)).parsed
+								() => scan.parsed
+							);
+							assert.strictEqual(
+								scan.valid,
+								false
 							);
 						}
 					)
@@ -188,9 +200,12 @@ void describe('TokenScan', () => {
 							JSON.stringify(input_string)
 						})).parsed behaves`,
 						() => {
-							const result = (
-								new TokenScan(input_string)
-							).parsed;
+							const result = scan.parsed;
+							assert.strictEqual(
+								scan.valid,
+								true
+							);
+
 							assert.strictEqual(
 								result.constructor.name,
 								expected_result_type
