@@ -8,8 +8,85 @@ import {
 	Numbers,
 } from '../../lib/Numbers';
 import Fraction from 'fraction.js';
+import {
+	math_types,
+} from '../../lib/IntermediaryNumber';
+import {
+	is_instanceof,
+} from '@satisfactory-clips-archive/custom-assert/assert/CustomAssert';
 
 void describe('Numbers', () => {
+	void describe('divide_if_not_one', () => {
+		const data_sets: (
+			| [
+				math_types,
+				Fraction,
+				string,
+			]
+		)[] = [
+			[
+				1,
+				new Fraction(1),
+				'1',
+			],
+			[
+				1,
+				new Fraction(2),
+				'0.5',
+			],
+			[
+				new Fraction(1),
+				new Fraction(1),
+				'1',
+			],
+			[
+				new Fraction(1),
+				new Fraction(2),
+				'0.5',
+			],
+		];
+
+		for (const [
+			left,
+			right,
+			expectation,
+		] of data_sets) {
+			void it(
+				`Numbers.divide_if_not_one(${
+					JSON.stringify(left)
+				}, ${
+					right.toString()
+				}) behaves as expected when returning ${
+					expectation
+				}`,
+				() => {
+					const require_fraction = Numbers.divide_if_not_one(
+						left,
+						right,
+						true
+					);
+					const fraction_not_required = Numbers.divide_if_not_one(
+						left,
+						right,
+						false
+					);
+
+					assert.strictEqual(
+						require_fraction.toString(),
+						expectation
+					);
+
+					is_instanceof(require_fraction, Fraction);
+
+					assert.strictEqual(
+						fraction_not_required.toString(),
+						expectation
+					);
+				}
+			)
+		}
+	})
+
 	void describe('least_common_multiple_deferred', () => {
 		const data_set:[
 			[number_arg, number_arg, ...number_arg[]],
