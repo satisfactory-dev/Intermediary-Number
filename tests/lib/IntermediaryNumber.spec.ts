@@ -123,6 +123,32 @@ void describe('IntermediaryNumber', () => {
 			)
 		}
 	})
+
+	void describe('do_math_then_dispose', () => {
+		void it('behaves', () => {
+			assert.strictEqual(
+				IntermediaryNumber.One.do_math_then_dispose(
+					'divide',
+					1
+				),
+				IntermediaryNumber.One
+			);
+			assert.strictEqual(
+				IntermediaryNumber.Zero.do_math_then_dispose(
+					'times',
+					1
+				),
+				IntermediaryNumber.Zero
+			);
+			assert.strictEqual(
+				IntermediaryNumber.One.do_math_then_dispose(
+					'plus',
+					1
+				).compare(2),
+				0
+			);
+		})
+	})
 });
 
 void describe('IntermediaryCalculation', () => {
