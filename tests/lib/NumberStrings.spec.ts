@@ -10,6 +10,7 @@ import {
 	NumberStrings,
 } from '../../lib/NumberStrings';
 import BigNumber from 'bignumber.js';
+import { IntermediaryCalculation, IntermediaryNumber, operand_types } from '../../lib/IntermediaryNumber';
 
 void describe('NumberStrings', () => {
 	void describe('amount_string', () => {
@@ -53,7 +54,7 @@ void describe('NumberStrings', () => {
 	})
 
 	void describe('round_off', () => {
-		const data_sets:[number_arg, string][] = [
+		const data_sets:[number_arg|operand_types, string][] = [
 			[22.50000001, '22.5'],
 			[20/65, '0.307693'],
 			[BigNumber('22.00000001'), '22'],
@@ -65,6 +66,7 @@ void describe('NumberStrings', () => {
 			[BigNumber('22.01'), '22.01'],
 			[BigNumber('22.1'), '22.1'],
 			[BigNumber('22'), '22'],
+			[IntermediaryNumber.create('22.00000001'), '22'],
 		];
 
 		for (const entry of data_sets) {
@@ -78,7 +80,14 @@ void describe('NumberStrings', () => {
 				}`,
 				() => {
 					assert.equal(
-						NumberStrings.round_off(BigNumber(input)),
+						NumberStrings.round_off(
+							(
+								(input instanceof IntermediaryNumber)
+								|| (input instanceof IntermediaryCalculation)
+							)
+								? input
+								: BigNumber(input)
+						),
 						expectation
 					)
 				}
