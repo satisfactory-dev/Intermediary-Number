@@ -18,7 +18,6 @@ import {
 	NumberStrings,
 } from '../../lib/NumberStrings';
 import {
-	is_instanceof,
 	not_undefined,
 } from '@satisfactory-clips-archive/custom-assert/assert/CustomAssert';
 import {
@@ -27,8 +26,7 @@ import {
 } from '../../lib/IntermediaryNumberTypes';
 
 void describe('IntermediaryNumber', () => {
-	void describe('create', () => {
-		const data_sets:[
+	const create_data_sets:[
 			input_types,
 			type_property_types|undefined,
 		][] = [
@@ -89,8 +87,8 @@ void describe('IntermediaryNumber', () => {
 				'Fraction',
 			],
 		];
-
-		for (const data_set of data_sets) {
+	void describe('create', () => {
+		for (const data_set of create_data_sets) {
 			const [input, expectation] = data_set;
 
 			void it(
@@ -116,23 +114,96 @@ void describe('IntermediaryNumber', () => {
 						return;
 					}
 
+					if (undefined === expectation) {
+						assert.throws(get_value);
+					} else {
+						const value = get_value();
+						assert.strictEqual(
+							value.type,
+							expectation,
+							`type of ${
+								JSON.stringify(value.toJSON())
+							} was expected to be ${
+								expectation
+							}, receieved ${
+								value.type
+							}`
+						);
+					}
+				}
+			)
+		}
+	})
+
+	void describe('create_if_valid', () => {
+		const data_sets:[
+			input_types,
+			'IntermediaryCalculation'|type_property_types|undefined,
+		][] = [
+			...create_data_sets.map(
+				(e): [
+					input_types,
+					type_property_types|undefined,
+				] => [
+					e[0],
+					'' === e[0] ? undefined : e[1],
+				]
+			),
+			[
+				'4 / 3',
+				'IntermediaryCalculation',
+			],
+		];
+
+		for (const [
+			input,
+			expectation,
+		] of data_sets) {
+			void it(
+				`IntermediaryNumber.create_if_valid(${
+					input.toString()
+				})${
+					undefined === expectation
+						? ' throws'
+						: `.type === ${expectation}`
+				}`,
+				() => {
 					const maybe = IntermediaryNumber.create_if_valid(
 						input.toString()
 					);
 
-					if (undefined === expectation) {
-						assert.throws(get_value);
-						is_instanceof(maybe, NotValid);
-					} else {
-						assert.strictEqual(
-							get_value().type,
-							expectation
-						);
+					let failure:string|undefined = undefined;
+
+					if (!(maybe instanceof NotValid)) {
+						failure = `Expecting an instance of NotValid, receieved ${
+							JSON.stringify(maybe.toJSON())
+						}`;
+					}
+
+					assert.strictEqual(
+						maybe instanceof NotValid,
+						(undefined === expectation),
+						failure
+					);
+
+					if (undefined !== expectation) {
+						const typecast = maybe as Exclude<
+							typeof maybe,
+							NotValid
+						>;
 
 						assert.strictEqual(
-							(maybe instanceof NotValid),
-							false,
-							`Expecting "${input.toString()}" to be valid`
+							typecast.type,
+							expectation,
+							`type of ${
+								JSON.stringify(typecast.toJSON())
+							} from input "${
+								input.toString()
+							}" was expected to be ${
+								expectation
+							}, receieved ${
+								typecast.type
+							}`
 						);
 					}
 				}
