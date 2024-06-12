@@ -494,10 +494,74 @@ void describe('CanConvertType', () => {
 			},
 		],
 		[
+			() => IntermediaryNumber.create(new Fraction(1)),
+			{
+				type: 'IntermediaryNumber',
+				value: '1',
+			},
+		],
+		[
+			() => IntermediaryNumber.create(new Fraction(2)),
+			{
+				type: 'IntermediaryNumber',
+				value: '2',
+			},
+		],
+		[
+			() => IntermediaryNumber.create('0'),
+			{
+				type: 'IntermediaryNumber',
+				value: '0',
+			},
+		],
+		[
+			() => IntermediaryNumber.create('1'),
+			{
+				type: 'IntermediaryNumber',
+				value: '1',
+			},
+		],
+		[
+			() => IntermediaryNumber.create('2'),
+			{
+				type: 'IntermediaryNumber',
+				value: '2',
+			},
+		],
+		[
+			() => IntermediaryNumber.create(new Fraction(2/3)),
+			{
+				type: 'IntermediaryCalculation',
+				left: {
+					type: 'IntermediaryNumber',
+					value: '2',
+				},
+				operation: '/',
+				right: {
+					type: 'IntermediaryNumber',
+					value: '3',
+				},
+			},
+		],
+		[
+			() => IntermediaryNumber.Zero,
+			{
+				type: 'IntermediaryNumber',
+				value: '0',
+			},
+		],
+		[
 			() => IntermediaryNumber.Zero.plus(1),
 			{
 				type: 'IntermediaryNumber',
 				value: '1',
+			},
+		],
+		[
+			() => IntermediaryNumber.Zero.plus(1).minus(1),
+			{
+				type: 'IntermediaryNumber',
+				value: '0',
 			},
 		],
 		[
