@@ -454,6 +454,26 @@ void describe('IntermediaryCalculation', () => {
 			)
 		})
 	})
+
+	void describe('toFraction', () => {
+		void it('behaves', () => {
+			const third = (new IntermediaryCalculation(
+				IntermediaryNumber.One,
+				'/',
+				IntermediaryNumber.create(3)
+			));
+
+			assert.strictEqual(
+				third.toFraction().toString(),
+				'0.(3)'
+			)
+
+			assert.strictEqual(
+				third.toFraction().toString(),
+				'0.(3)'
+			)
+		})
+	})
 })
 
 void describe('do_math', () => {
