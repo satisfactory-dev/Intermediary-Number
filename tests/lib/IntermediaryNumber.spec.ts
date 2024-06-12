@@ -282,6 +282,61 @@ void describe('IntermediaryNumber', () => {
 			)
 		})
 	})
+
+	void describe('fromJson', () => {
+		const data_sets:[
+			CanConvertTypeJson,
+			'IntermediaryCalculation'|type_property_types,
+			string,
+		][] = [
+			[
+				{
+					type: 'IntermediaryNumber',
+					value: '1',
+				},
+				'amount_string',
+				'1',
+			],
+			[
+				{
+					type: 'IntermediaryCalculation',
+					left: {
+						type: 'IntermediaryNumber',
+						value: '1',
+					},
+					operation: '/',
+					right: {
+						type: 'IntermediaryNumber',
+						value: '3',
+					},
+				},
+				'IntermediaryCalculation',
+				'0.(3)',
+			],
+		];
+
+		for (const [
+			input,
+			expected_type,
+			expected_string,
+		] of data_sets) {
+			void it(
+				`foo = IntermediaryNumber.fromJson(${
+					JSON.stringify(input)
+				}); foo.type === ${
+					expected_type
+				}; foo.toString() === ${
+					expected_string
+				}`,
+				() => {
+					const value = IntermediaryNumber.fromJson(input);
+
+					assert.strictEqual(value.type, expected_type);
+					assert.strictEqual(value.toString(), expected_string);
+				}
+			)
+		}
+	})
 });
 
 void describe('IntermediaryCalculation', () => {
