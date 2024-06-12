@@ -149,6 +149,39 @@ void describe('IntermediaryNumber', () => {
 			);
 		})
 	})
+
+	void describe('isGreaterThan', () => {
+		const data_sets:[operand_types|input_types, math_types, boolean][] = [
+			[IntermediaryNumber.One, IntermediaryNumber.Zero, true],
+			[IntermediaryNumber.One, IntermediaryNumber.One, false],
+			[IntermediaryNumber.Zero, IntermediaryNumber.One, false],
+		];
+
+		for (const [
+			left_raw,
+			right_raw,
+			expectation,
+		] of data_sets) {
+			const left = IntermediaryNumber.reuse_or_create(left_raw);
+			const right = IntermediaryNumber.reuse_or_create(right_raw);
+
+			void it(
+				`IntermediaryNumber.isGreaterThan(${
+					left.toString()
+				}, ${
+					right.toString()
+				}) === ${
+					expectation ? 'true' : 'false'
+				}`,
+				() => {
+					assert.strictEqual(
+						left.isGreaterThan(right),
+						expectation
+					)
+				}
+			)
+		}
+	})
 });
 
 void describe('IntermediaryCalculation', () => {
