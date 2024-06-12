@@ -1,7 +1,0 @@
-{
-	"extends": "./tsconfig",
-	"include": ["./generated-types/**/*.ts"],
-	"compilerOptions": {
-		"noEmit": true
-	}
-}

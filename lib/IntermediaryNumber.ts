@@ -3,7 +3,7 @@ import BigNumber from 'bignumber.js';
 import Fraction from 'fraction.js';
 import {
 	is_string,
-} from '@satisfactory-clips-archive/docs.json.ts/lib/StringStartsWith';
+} from './Docs.json';
 import {
 	amount_string,
 	NumberStrings,

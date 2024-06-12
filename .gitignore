@@ -1,6 +1,5 @@
 /node_modules/
 /data/
-/generated-types/
 /.eslintcache
 /**/*.js
 /**/*.js.map

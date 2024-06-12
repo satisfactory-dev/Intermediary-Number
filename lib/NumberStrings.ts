@@ -1,16 +1,9 @@
 import {
 	is_string,
-} from '@satisfactory-clips-archive/docs.json.ts/lib/StringStartsWith';
-import {
-	NoMatchError,
-} from '@satisfactory-clips-archive/docs.json.ts/lib/Exceptions';
-
-import {
+	NotAnAmountString,
 	StringPassedRegExp,
-} from '../generated-types/update8/utils/validators';
-import {
 	integer_string__type,
-} from '../generated-types/update8/common/unassigned';
+} from './Docs.json';
 import BigNumber from 'bignumber.js';
 import Fraction from 'fraction.js';
 import type {
@@ -31,14 +24,7 @@ export class NumberStrings
 {
 	static amount_string(maybe:string): amount_string
 	{
-		if (
-			!this.is_amount_string(maybe)
-		) {
-			throw new NoMatchError(
-				maybe,
-				'Not a supported amount string!'
-			);
-		}
+		this.throw_if_not_amount_string(maybe);
 
 		return maybe;
 	}
@@ -115,5 +101,17 @@ export class NumberStrings
 			DECIMAL_PLACES: 7,
 			ROUNDING_MODE: BigNumber.ROUND_HALF_CEIL,
 		});
+	}
+
+	private static throw_if_not_amount_string(
+		maybe:string
+	): asserts maybe is amount_string {
+		if (
+			!this.is_amount_string(maybe)
+		) {
+			throw new NotAnAmountString(
+				'Not a supported amount string!'
+			);
+		}
 	}
 }

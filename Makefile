@@ -5,25 +5,7 @@ build:
 	@echo 'building from ./tsconfig.app.json'
 	@NODE_OPTIONS='' ./node_modules/.bin/tsc --project ./tsconfig.app.json
 
-generate: generate--skip-checks lint generate--post-build generate--post-docs-json
-
-generate--skip-checks:
-	@echo 'running ./generate-Docs.json.ts'
-	@./node_modules/.bin/ts-node ./generate-Docs.json.ts
-	@make build
-
-generate--post-build:
-	@NODE_OPTIONS='' ./node_modules/.bin/tsc --project ./tsconfig.generated-types-check.json
-	@./node_modules/.bin/eslint \
-		--config ./generated-types/.eslintrc.json \
-		--cache-location ./generated-types/update8/.eslintcache \
-		--cache-strategy content \
-		--cache \
-		./generated-types/
-
-generate--post-docs-json:
-	@./node_modules/.bin/ts-node ./generate-faux-recipe-ingredient-list.ts
-	@make build
+generate: build lint
 
 lint--tsc:
 	@echo 'running syntax check'

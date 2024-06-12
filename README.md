@@ -1,6 +1,6 @@
-# Satisfactory Production Calculator
+# Intermediary Number
 
-Production Calculator for Satisfactory built upon [Docs.json.ts](https://github.com/Satisfactory-Clips-Archive/Docs.json.ts).
+Intermediary Number classes & utilities for the [Production Calculator](https://github.com/SignpostMarv/Satisfactory-Production-Calculator) for Satisfactory built upon [Docs.json.ts](https://github.com/Satisfactory-Clips-Archive/Docs.json.ts).
 
 ## Using
 
@@ -8,7 +8,6 @@ Production Calculator for Satisfactory built upon [Docs.json.ts](https://github.
 
 -   Docker
     -   vscode recommended to use devcontainer support
--   A copy of Update 's `Docs.json` file
 
 ### Setup
 
@@ -18,7 +17,6 @@ Production Calculator for Satisfactory built upon [Docs.json.ts](https://github.
     - `NODE_OPTIONS` env var may require opening a fresh terminal if you
       receieve an error along the lines of
       `TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts"`
-1. Copy `Docs.json` to `./data/`
 1. Run `make generate`
 
 ## Documentation
@@ -29,8 +27,5 @@ Please refer to the tests in the meantime.
 
 ## Issues
 
-Issue tracker for both the calculator and the UI built atop the calculator are [available on GitHub](https://github.com/users/SignpostMarv/projects/1).
-
-## Implementations
-
--   [SignpostMarv's Experimental Production Planner](https://tools.satisfactory.video/experimental-production-planner/)
+-   Issue tracker for all the related projects except Docs.json.ts are [available on GitHub](https://github.com/users/SignpostMarv/projects/1).
+-   [Issues with Docs.json.ts currently need to be viewed separately](https://github.com/Satisfactory-Clips-Archive/Docs.json.ts/issues).
