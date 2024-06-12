@@ -410,6 +410,30 @@ void describe('IntermediaryCalculation', () => {
 			)
 		})
 	})
+
+	void describe('plus', () => {
+		void it('behaves', () => {
+			const two = new IntermediaryCalculation(
+				IntermediaryNumber.One,
+				'+',
+				IntermediaryNumber.One,
+			);
+
+			assert.strictEqual(
+				two.plus(IntermediaryNumber.Zero).toString(),
+				'2'
+			)
+
+			assert.strictEqual(
+				(new IntermediaryCalculation(
+					IntermediaryNumber.One,
+					'-',
+					IntermediaryNumber.One,
+				)).plus(two),
+				two
+			)
+		})
+	})
 })
 
 void describe('do_math', () => {
