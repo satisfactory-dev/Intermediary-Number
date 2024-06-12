@@ -360,6 +360,22 @@ void describe('IntermediaryCalculation', () => {
 			'1'
 		);
 	});
+
+	void describe('do_math_then_dispose', () => {
+		void it('behaves', () => {
+			const two = new IntermediaryCalculation(
+				IntermediaryNumber.One,
+				'+',
+				IntermediaryNumber.One,
+			);
+			const divided = two.do_math_then_dispose('divide', 1);
+
+			assert.notStrictEqual(
+				two,
+				divided
+			);
+		})
+	})
 })
 
 void describe('do_math', () => {
