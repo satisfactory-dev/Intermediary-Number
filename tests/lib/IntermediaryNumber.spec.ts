@@ -474,6 +474,21 @@ void describe('IntermediaryCalculation', () => {
 			)
 		})
 	})
+
+	void describe('toJSON', () => {
+		void it('behaves', () => {
+			const adjusted_zero = new IntermediaryCalculation(
+				IntermediaryNumber.One,
+				'-',
+				IntermediaryNumber.Zero
+			);
+
+			assert.deepStrictEqual(
+				adjusted_zero.toJSON(),
+				IntermediaryNumber.One.toJSON()
+			)
+		})
+	})
 })
 
 void describe('do_math', () => {
