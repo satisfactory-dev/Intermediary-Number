@@ -1,3 +1,6 @@
+[![Coverage Status](https://coveralls.io/repos/github/SignpostMarv/Intermediary-Number/badge.svg?branch=main)](https://coveralls.io/github/SignpostMarv/Intermediary-Number?branch=main)
+[![Workflow Status](https://github.com/SignpostMarv/Intermediary-Number/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/SignpostMarv/Intermediary-Number/actions/workflows/node.js.yml?query=branch%3Amain)
+
 # Intermediary Number
 
 Intermediary Number classes & utilities for the [Production Calculator](https://github.com/SignpostMarv/Satisfactory-Production-Calculator) for Satisfactory built upon [Docs.json.ts](https://github.com/Satisfactory-Clips-Archive/Docs.json.ts).
