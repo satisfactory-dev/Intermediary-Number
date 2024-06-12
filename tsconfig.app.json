@@ -1,4 +1,7 @@
 {
 	"extends": "./tsconfig",
-	"include": ["./*.ts", "./lib/**/*.ts", "./tests/**/*.ts"]
+	"include": ["./*.ts", "./lib/**/*.ts", "./tests/**/*.ts"],
+	"compilerOptions": {
+		"declaration": true
+	}
 }
