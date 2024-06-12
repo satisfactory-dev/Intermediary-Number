@@ -1,8 +1,8 @@
 import {
+	integer_string__type,
 	is_string,
 	NotAnAmountString,
 	StringPassedRegExp,
-	integer_string__type,
 } from './Docs.json';
 import BigNumber from 'bignumber.js';
 import Fraction from 'fraction.js';

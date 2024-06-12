@@ -10,7 +10,11 @@ import {
 	NumberStrings,
 } from '../../lib/NumberStrings';
 import BigNumber from 'bignumber.js';
-import { IntermediaryCalculation, IntermediaryNumber, operand_types } from '../../lib/IntermediaryNumber';
+import {
+	IntermediaryCalculation,
+	IntermediaryNumber,
+	operand_types,
+} from '../../lib/IntermediaryNumber';
 
 void describe('NumberStrings', () => {
 	void describe('amount_string', () => {
