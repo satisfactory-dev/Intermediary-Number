@@ -123,4 +123,49 @@ void describe('Numbers', () => {
 			)
 		}
 	})
+
+	void describe('sum_series_fraction', () => {
+		void it('throws if a is less than or equal to b', () => {
+			assert.throws(() => Numbers.sum_series_fraction(
+				new Fraction(1),
+				new Fraction(1)
+			));
+			assert.throws(() => Numbers.sum_series_fraction(
+				new Fraction(0.5),
+				new Fraction(1)
+			));
+		})
+
+		const data_sets:[Fraction, Fraction, Fraction][] = [
+			[
+				new Fraction(1),
+				new Fraction(0.25),
+				new Fraction(4/3),
+			],
+		];
+
+		for (const [
+			a,
+			b,
+			expectation,
+		] of data_sets) {
+			void it(
+				`Numbers.sum_series_fraction(${
+					a.toString()
+				}, ${
+					b.toString()
+				}) === ${
+					expectation.toString()
+				}`,
+				() => {
+					assert.strictEqual(
+						Numbers.sum_series_fraction(a, b).compare(
+							expectation
+						),
+						0
+					);
+				}
+			)
+		}
+	})
 })
