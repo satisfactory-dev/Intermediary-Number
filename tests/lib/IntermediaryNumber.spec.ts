@@ -33,6 +33,10 @@ void describe('IntermediaryNumber', () => {
 			type_property_types|undefined,
 		][] = [
 			[
+				'',
+				'amount_string',
+			],
+			[
 				'1',
 				'amount_string',
 			],
@@ -99,6 +103,18 @@ void describe('IntermediaryNumber', () => {
 				}`,
 				() => {
 					const get_value = () => IntermediaryNumber.create(input);
+
+					if ('' === input) {
+						assert.strictEqual(
+							get_value(),
+							IntermediaryNumber.Zero
+						)
+						assert.strictEqual(
+							get_value().type,
+							expectation
+						)
+						return;
+					}
 
 					const maybe = IntermediaryNumber.create_if_valid(
 						input.toString()
