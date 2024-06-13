@@ -1,8 +1,6 @@
 /node_modules/
-/data/
 /.eslintcache
 /**/*.js
 /**/*.js.map
 /coverage/
-/discover-types.perf.json
 /**/*.d.ts
