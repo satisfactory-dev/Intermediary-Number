@@ -9,18 +9,18 @@
 	},
 	"funding": "https://github.com/SignpostMarv/Intermediary-Number?sponsor=1",
 	"devDependencies": {
-		"@eslint/js": "^9.0.0",
+		"@eslint/js": "^9.4.0",
 		"@stdlib/types": "^0.3.2",
-		"@types/eslint": "^8.56.9",
-		"@types/node": "^20.12.7",
+		"@types/eslint": "^8.56.10",
+		"@types/node": "^20.14.2",
 		"c8": "^9.1.0",
 		"eslint": "^8.57.0",
-		"glob": "^10.3.12",
-		"prettier": "^3.2.5",
+		"glob": "^10.4.1",
+		"prettier": "^3.3.2",
 		"ts-node": "^10.9.2",
-		"tslib": "^2.6.2",
+		"tslib": "^2.6.3",
 		"typescript": "^5.4.5",
-		"typescript-eslint": "^7.7.0"
+		"typescript-eslint": "^7.13.0"
 	},
 	"dependencies": {
 		"@satisfactory-clips-archive/custom-assert": "^0.1.2",
