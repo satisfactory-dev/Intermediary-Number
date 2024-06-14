@@ -1013,6 +1013,21 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 		return value;
 	}
 
+	toStringCalculation(): string
+	{
+		return `${
+			(this.left_operand instanceof IntermediaryCalculation)
+				? `(${this.left_operand.toStringCalculation()})`
+				: this.left_operand.toString()
+		} ${
+			this.operation
+		} ${
+			(this.right_operand instanceof IntermediaryCalculation)
+				? `(${this.right_operand.toStringCalculation()})`
+				: this.right_operand.toString()
+		}`
+	}
+
 	private operand_to_IntermediaryNumber(
 		operand:operand_types
 	) : IntermediaryNumber {
@@ -1040,6 +1055,11 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 		return (new TokenScan(input)).parsed;
 	}
 
+	static is(maybe: unknown): maybe is IntermediaryCalculation
+	{
+		return maybe instanceof this;
+	}
+
 	static maybe_reduce_operands(
 		left:operand_types,
 		operation:operation_types,
@@ -1060,6 +1080,15 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 		}
 
 		return value;
+	}
+
+	static require_is(maybe: unknown): asserts maybe is IntermediaryCalculation
+	{
+		if (!this.is(maybe)) {
+			throw new Error(
+				'Argument is not an instanceof IntermediaryCalculation'
+			);
+		}
 	}
 
 	private static maybe_short_circuit(
