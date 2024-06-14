@@ -9,11 +9,10 @@ import {
 
 import {
 	CanDoMathWithDispose_operator_types,
-	CanDoMath_result_types,
 	IntermediaryCalculation,
 	IntermediaryNumber,
-	TokenScan,
 	math_types,
+	TokenScan,
 } from '../../lib/IntermediaryNumber';
 import {
 	expand_fraction_string,
