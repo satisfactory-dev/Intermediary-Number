@@ -1,5 +1,5 @@
 {
-	"name": "Docs.json.ts production planner",
+	"name": "Intermediary Number",
 	"build": {
 		"dockerfile": "Dockerfile"
 	},
