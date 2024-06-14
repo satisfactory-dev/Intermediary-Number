@@ -3,17 +3,16 @@ import {
 	it,
 } from 'node:test';
 import assert from 'node:assert/strict';
-import {
-	number_arg,
-	Numbers,
-} from '../../lib/Numbers';
 import Fraction from 'fraction.js';
-import {
-	math_types,
-} from '../../lib/IntermediaryNumber';
 import {
 	is_instanceof,
 } from '@satisfactory-clips-archive/custom-assert/assert/CustomAssert';
+
+import {
+	math_types,
+	number_arg,
+	Numbers,
+} from '../../index';
 
 void describe('Numbers', () => {
 	void describe('divide_if_not_one', () => {

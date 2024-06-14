@@ -4,17 +4,16 @@ import {
 } from 'node:test';
 import assert from 'node:assert/strict';
 import {
-	number_arg,
-} from '../../lib/Numbers';
-import {
 	NumberStrings,
 } from '../../lib/NumberStrings';
 import BigNumber from 'bignumber.js';
+
 import {
 	IntermediaryCalculation,
 	IntermediaryNumber,
+	number_arg,
 	operand_types,
-} from '../../lib/IntermediaryNumber';
+} from '../../index';
 
 void describe('NumberStrings', () => {
 	void describe('amount_string', () => {

@@ -4,6 +4,10 @@ import {
 } from 'node:test';
 import assert from 'node:assert/strict';
 import {
+	not_undefined,
+} from '@satisfactory-clips-archive/custom-assert/assert/CustomAssert';
+
+import {
 	TokenScan,
 } from '../../lib/IntermediaryNumber';
 import {
@@ -12,9 +16,6 @@ import {
 	from_string_data_set,
 	random_ignore_string,
 } from '../utilities/expand-string-parsing';
-import {
-	not_undefined,
-} from '@satisfactory-clips-archive/custom-assert/assert/CustomAssert';
 
 const from_string_data_sets:from_string_data_set[] = [
 	[

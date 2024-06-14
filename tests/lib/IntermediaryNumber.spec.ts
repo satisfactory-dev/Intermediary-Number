@@ -3,27 +3,24 @@ import {
 	it,
 } from 'node:test';
 import assert from 'node:assert/strict';
+import Fraction from 'fraction.js';
+import BigNumber from 'bignumber.js';
+import {
+	not_undefined,
+} from '@satisfactory-clips-archive/custom-assert/assert/CustomAssert';
+
 import {
 	CanConvertType,
 	CanConvertTypeJson,
+	input_types,
 	IntermediaryCalculation,
 	IntermediaryNumber,
 	math_types,
 	NotValid,
-	operand_types,
-} from '../../lib/IntermediaryNumber';
-import Fraction from 'fraction.js';
-import BigNumber from 'bignumber.js';
-import {
 	NumberStrings,
-} from '../../lib/NumberStrings';
-import {
-	not_undefined,
-} from '@satisfactory-clips-archive/custom-assert/assert/CustomAssert';
-import {
-	input_types,
+	operand_types,
 	type_property_types,
-} from '../../lib/IntermediaryNumberTypes';
+} from '../../index';
 
 void describe('IntermediaryNumber', () => {
 	const create_data_sets:[
