@@ -51,7 +51,7 @@ export type CanConvertTypeJson =
 		right: CanConvertTypeJson,
 	};
 
-type CanDoMathWithDispose_operator_types =
+export type CanDoMathWithDispose_operator_types =
 	| 'divide'
 	| 'minus'
 	| 'modulo'
@@ -1168,7 +1168,9 @@ const regex_numeric = (
 	/(?:\d*\.\d*\(\d+\)r?|\d*\.\d*\[\d+\]r?|\d+(?:\.\d+r)?|\.\d+r?)/g
 );
 
-export class TokenScan
+// eslint-disable-next-line max-len
+// @todo add TokenScan to CanDoMath_result_types then return a new instance of TokenScan
+export class TokenScan implements CanResolveMathWithDispose
 {
 	private readonly internal:TokenScan_internals = {
 		parsed: undefined,
@@ -1192,6 +1194,10 @@ export class TokenScan
 		return this.internal.parsed;
 	}
 
+	get resolve_type(): string {
+		return this.parsed.resolve_type;
+	}
+
 	get tokens(): Exclude<TokenScan_internals['tokens'], undefined>
 	{
 		if (undefined === this.internal.tokens) {
@@ -1199,6 +1205,13 @@ export class TokenScan
 		}
 
 		return this.internal.tokens;
+	}
+
+	/**
+	 * @todo change to `return 'TokenScan';`
+	 */
+	get type(): operand_type_property_types {
+		throw new Error('Method not implemented.');
 	}
 
 	get valid(): boolean
@@ -1213,6 +1226,111 @@ export class TokenScan
 		}
 
 		return this.internal.valid;
+	}
+
+	abs(): IntermediaryNumber | IntermediaryCalculation {
+		return this.parsed.abs();
+	}
+
+	compare(value: math_types): 0 | 1 | -1 {
+		return this.parsed.compare(value);
+	}
+
+	divide(value: math_types): CanDoMath_result_types {
+		return this.parsed.divide(value);
+	}
+
+	do_math_then_dispose(
+		operator: CanDoMathWithDispose_operator_types,
+		right_operand: math_types
+	): CanDoMath_result_types {
+		const result = this.parsed.do_math_then_dispose(
+			operator,
+			right_operand
+		);
+		this.internal.parsed = undefined;
+
+		return result;
+	}
+
+	isGreaterThan(value: math_types): boolean {
+		return this.parsed.isGreaterThan(value);
+	}
+
+	isLessThan(value: math_types): boolean {
+		return this.parsed.isLessThan(value);
+	}
+
+	isOne(): boolean {
+		return (
+			'1' === this.value.trim()
+			|| this.parsed.isOne()
+		);
+	}
+
+	isZero(): boolean {
+		return (
+			'0' === this.value.trim()
+			|| this.parsed.isZero()
+		);
+	}
+
+	max(first: math_types, ...remaining: math_types[]): math_types {
+		return this.parsed.max(first, ...remaining);
+	}
+
+	minus(value: math_types): CanDoMath_result_types {
+		return this.parsed.minus(value);
+	}
+
+	modulo(value: math_types): CanDoMath_result_types {
+		return this.parsed.modulo(value);
+	}
+
+	plus(value: math_types): CanDoMath_result_types {
+		return this.parsed.plus(value);
+	}
+
+	resolve(): IntermediaryNumber {
+		const parsed = this.parsed;
+
+		return IntermediaryCalculation.is(parsed) ? parsed.resolve() : parsed;
+	}
+
+	times(value: math_types): CanDoMath_result_types {
+		return this.parsed.times(value);
+	}
+
+	toAmountString(): amount_string {
+		return this.parsed.toAmountString();
+	}
+
+	toBigNumber(): BigNumber {
+		return this.parsed.toBigNumber();
+	}
+
+	toBigNumberOrFraction(): BigNumber | Fraction {
+		return this.parsed.toBigNumberOrFraction();
+	}
+
+	toFraction(): Fraction {
+		return this.parsed.toFraction();
+	}
+
+	/**
+	 * @todo implement
+	 */
+	toJSON(): CanConvertTypeJson {
+		throw new Error('Method not implemented.');
+	}
+
+	toString(): string {
+		return this.parsed.toString();
+	}
+
+	toStringCalculation(): string
+	{
+		return this.value;
 	}
 
 	private static determine_tokens_from_scan(

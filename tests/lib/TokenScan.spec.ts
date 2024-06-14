@@ -8,7 +8,12 @@ import {
 } from '@satisfactory-clips-archive/custom-assert/assert/CustomAssert';
 
 import {
+	CanDoMathWithDispose_operator_types,
+	CanDoMath_result_types,
+	IntermediaryCalculation,
+	IntermediaryNumber,
 	TokenScan,
+	math_types,
 } from '../../lib/IntermediaryNumber';
 import {
 	expand_fraction_string,
@@ -16,6 +21,8 @@ import {
 	from_string_data_set,
 	random_ignore_string,
 } from '../utilities/expand-string-parsing';
+import BigNumber from 'bignumber.js';
+import Fraction from 'fraction.js';
 
 const from_string_data_sets:from_string_data_set[] = [
 	[
@@ -225,6 +232,239 @@ void describe('TokenScan', () => {
 					)
 				}
 			}
+		}
+	})
+
+	void describe('CanResolveMathWithDispose', () => {
+		const data_sets:(
+			| [
+				string,
+				[
+					| 'abs'
+					| 'resolve'
+					| 'toAmountString'
+					| 'toBigNumber'
+					| 'toBigNumberOrFraction'
+					| 'toFraction'
+					| 'toString'
+					| 'toStringCalculation'
+				],
+				string,
+			]
+			| [
+				string,
+				['compare', math_types],
+				'-1'|'0'|'1',
+			]
+			| [
+				string,
+				['divide'|'minus'|'modulo'|'plus'|'times', math_types],
+				string,
+			]
+			| [
+				string,
+				[
+					'do_math_then_dispose',
+					CanDoMathWithDispose_operator_types,
+					math_types
+				],
+				string
+			]
+			| [
+				string,
+				['isGreaterThan'|'isLessThan', math_types],
+				'false'|'true',
+			]
+			| [
+				string,
+				['isOne'|'isZero'],
+				'false'|'true',
+			]
+			| [
+				string,
+				['max', math_types, ...math_types[]],
+				string,
+			]
+		)[] = [
+			['-1', ['abs'], '1'],
+			['1', ['compare', IntermediaryNumber.One], '0'],
+			['2 * 3', ['divide', 4], '1.5'],
+			['2 * 3', ['do_math_then_dispose', 'divide', 4], '1.5'],
+			['-1', ['isGreaterThan', IntermediaryNumber.Zero], 'false'],
+			['-1', ['isLessThan', IntermediaryNumber.Zero], 'true'],
+			['1+2/3', ['isOne'], 'true'],
+			['1', ['isOne'], 'true'],
+			['1+2/3', ['isZero'], 'false'],
+			['0', ['isZero'], 'true'],
+			['2 * 3', ['max', 1, 2], '6'],
+			['-1', ['minus', 1], '-2'],
+			['-1', ['minus', -1], '0'],
+			['4/3', ['modulo', 1], '0.(3)'],
+			['-1', ['plus', 1], '0'],
+			['1+2/3', ['resolve'], '1'],
+			['1', ['resolve'], '1'],
+			['-1', ['times', 2], '-2'],
+			['4/3', ['toAmountString'], '1.333334'],
+			['4/3', ['toBigNumber'], '1.3333333333333333'],
+			['4/3', ['toBigNumberOrFraction'], '1.(3)'],
+			['4/3', ['toFraction'], '1.(3)'],
+			['1+2/3', ['toString'], '1'],
+			['1+2/-3', ['toString'], '-1'],
+			['1+2/3', ['toStringCalculation'], '1+2/3'],
+			['1 + 2 / 3', ['toStringCalculation'], '1 + 2 / 3'],
+			['1+ 2 / 3', ['toStringCalculation'], '1+ 2 / 3'],
+		];
+
+		for (const [
+			input,
+			[
+				method,
+				...additional_args
+			],
+			expectation,
+		] of data_sets) {
+			void it(
+				`(new TokenScan(${
+					input
+				})).${
+					method
+				}(${
+					0 === additional_args.length
+						? ''
+						: additional_args.map(
+							e => JSON.stringify(e)
+						).join(', ')
+				}).toString() === ${
+					expectation
+				}`,
+				() => {
+					const scan = new TokenScan(input);
+					assert.strictEqual(
+						scan.valid,
+						true,
+						'input not valid!'
+					);
+
+					let result:unknown;
+
+					if (
+						'abs' === method
+						|| 'isOne' === method
+						|| 'isZero' === method
+						|| 'resolve' === method
+						|| 'toAmountString' === method
+						|| 'toBigNumber' === method
+						|| 'toBigNumberOrFraction' === method
+						|| 'toFraction' === method
+						|| 'toString' === method
+						|| 'toStringCalculation' === method
+					) {
+						result = scan[method]();
+					} else if (
+						'compare' === method
+						|| 'divide' === method
+						|| 'isGreaterThan' === method
+						|| 'isLessThan' === method
+						|| 'minus' === method
+						|| 'modulo' === method
+						|| 'plus' === method
+						|| 'times' === method
+					) {
+						assert.strictEqual(
+							additional_args.length,
+							1,
+							`Expecting 1 argument for ${
+								method
+							}, received ${
+								additional_args.length
+							}`
+						);
+
+						result = scan[method](additional_args[0]);
+					} else if (
+						'do_math_then_dispose' === method
+					) {
+						assert.strictEqual(
+							additional_args.length,
+							2,
+							`Expecting 2 arguments for ${
+								method
+							}, received ${
+								additional_args.length
+							}`
+						);
+
+						result = scan[method](
+							additional_args[
+								0
+							] as CanDoMathWithDispose_operator_types,
+							additional_args[1]
+						);
+					} else if (
+						'max' === method
+					) {
+						assert.strictEqual(
+							additional_args.length >= 1,
+							true,
+							`Expecting at least 1 argument for ${
+								method
+							}, received ${
+								additional_args.length
+							}`
+						);
+
+						const [
+							first,
+							...remaining
+						] = additional_args;
+
+						result = scan[method](
+							first as math_types,
+							...remaining
+						);
+					}
+
+					assert.strictEqual(
+						(
+							(result instanceof IntermediaryNumber)
+							|| (result instanceof IntermediaryCalculation)
+							|| (result instanceof TokenScan)
+							|| (result instanceof BigNumber)
+							|| (result instanceof Fraction)
+							|| 'boolean' === typeof result
+							|| 'string' === typeof result
+							|| 'number' === typeof result
+						),
+						true,
+						// eslint-disable-next-line max-len
+						`Expecting either a boolean, string, number, or an appropriate class instance, received ${
+							undefined === result
+								? 'undefined'
+								: (
+									null === result
+										? 'null'
+										: (result).constructor.name
+								)
+						}`
+					);
+
+					assert.strictEqual(
+						(
+							result as (
+								| IntermediaryNumber
+								| IntermediaryCalculation
+								| TokenScan
+								| BigNumber
+								| Fraction
+								| boolean
+								| string
+								| number
+							)
+						).toString(),
+						expectation
+					);
+				}
+			)
 		}
 	})
 })
