@@ -17,6 +17,8 @@ import {
 	TokenScan,
 } from './TokenScan';
 
+//#region Types
+
 export type math_types =
 	| operand_types
 	| input_types;
@@ -27,6 +29,45 @@ export const regex_recurring_number =
 export type CanDoMath_result_types =
 	| IntermediaryNumber
 	| IntermediaryCalculation;
+
+export type operation_types =
+	| '+'
+	| '-'
+	| '*'
+	| 'x'
+	| '/'
+	| '%';
+
+export type operand_type_property_types =
+	| type_property_types
+	| 'IntermediaryCalculation';
+
+export type CanConvertTypeJson =
+	| {
+		type: 'IntermediaryNumber',
+		value: string,
+	}
+	| {
+		type: 'IntermediaryCalculation',
+		left: CanConvertTypeJson,
+		operation: operation_types,
+		right: CanConvertTypeJson,
+	};
+
+type CanDoMathWithDispose_operator_types =
+	| 'divide'
+	| 'minus'
+	| 'modulo'
+	| 'plus'
+	| 'times';
+
+export type operand_types =
+	| IntermediaryNumber
+	| IntermediaryCalculation;
+
+//#endregion
+
+//#region interfaces
 
 interface HasType
 {
@@ -83,18 +124,6 @@ interface CanResolveMath<
 	resolve(): IntermediaryNumber;
 }
 
-export type CanConvertTypeJson =
-	| {
-		type: 'IntermediaryNumber',
-		value: string,
-	}
-	| {
-		type: 'IntermediaryCalculation',
-		left: CanConvertTypeJson,
-		operation: operation_types,
-		right: CanConvertTypeJson,
-	};
-
 export interface CanConvertType extends HasType
 {
 	toAmountString(): amount_string;
@@ -118,13 +147,6 @@ export interface CanConvertType extends HasType
 	toJSON(): CanConvertTypeJson;
 }
 
-type CanDoMathWithDispose_operator_types =
-	| 'divide'
-	| 'minus'
-	| 'modulo'
-	| 'plus'
-	| 'times';
-
 interface CanDoMathWithDispose<
 	ResultType extends CanDoMath_result_types = CanDoMath_result_types,
 	ResolveString extends string = type_property_types
@@ -145,6 +167,10 @@ interface CanResolveMathWithDispose<
 	CanDoMathWithDispose<T, string>
 {
 }
+
+//#endregion
+
+//#region utility functions
 
 function do_math(
 	left_operand: IntermediaryNumber|IntermediaryCalculation,
@@ -284,6 +310,10 @@ function max(
 
 	return IntermediaryNumber.reuse_or_create(max);
 }
+
+//#endregion
+
+//#region IntermediaryNumber
 
 export class IntermediaryNumber implements CanDoMathWithDispose
 {
@@ -604,6 +634,10 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 	}
 }
 
+//#endregion
+
+//#region IntermediaryCalculation
+
 export class NotValid extends Error
 {
 	readonly reason: unknown;
@@ -617,22 +651,6 @@ export class NotValid extends Error
 		this.reason = reason;
 	}
 }
-
-export type operand_types =
-	| IntermediaryNumber
-	| IntermediaryCalculation;
-
-export type operation_types =
-	| '+'
-	| '-'
-	| '*'
-	| 'x'
-	| '/'
-	| '%';
-
-export type operand_type_property_types =
-	| type_property_types
-	| 'IntermediaryCalculation';
 
 const BigNumber_operation_map:{
 	[
@@ -979,3 +997,5 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 		return value;
 	}
 }
+
+//#endregion
