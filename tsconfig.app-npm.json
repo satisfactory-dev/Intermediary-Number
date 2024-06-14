@@ -2,5 +2,5 @@
 	"extends": "./tsconfig.app",
 	"compilerOptions": {
 		"sourceMap": false
-	},
+	}
 }
