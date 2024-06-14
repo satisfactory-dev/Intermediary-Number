@@ -22,6 +22,9 @@ import {
 } from '../utilities/expand-string-parsing';
 import BigNumber from 'bignumber.js';
 import Fraction from 'fraction.js';
+import {
+	is_string,
+} from '../../lib/Docs.json';
 
 const from_string_data_sets:from_string_data_set[] = [
 	[
@@ -138,6 +141,18 @@ const from_string_data_sets:from_string_data_set[] = [
 		'IntermediaryCalculation + amount_string',
 		'46.5(3)',
 	]),
+	...expand_ignore_characters([
+		'(1 - 0) + 2',
+		'IntermediaryCalculation',
+		'IntermediaryCalculation + amount_string',
+		'3',
+	]),
+	...expand_ignore_characters([
+		'1 + (2 - 0)',
+		'IntermediaryCalculation',
+		'amount_string + IntermediaryCalculation',
+		'3',
+	]),
 ];
 
 const from_string_data_sets_throwing:[
@@ -156,11 +171,11 @@ void describe('TokenScan', () => {
 			input,
 		] of from_string_data_sets_throwing) {
 			void it(
-				`(new TokenScan(${
+				`(TokenScan.create(${
 					JSON.stringify(input)
 				})).parsed throws`,
 				() => {
-					const scan = new TokenScan(input);
+					const scan = TokenScan.create(input);
 
 					assert.throws(() => scan.parsed);
 					assert.strictEqual(
@@ -183,11 +198,11 @@ void describe('TokenScan', () => {
 				`${raw_input_string}${random_ignore_string()}`,
 				`${random_ignore_string()}${raw_input_string}${random_ignore_string()}`,
 			]) {
-				const scan = new TokenScan(input_string);
+				const scan = TokenScan.create(input_string);
 
 				if (undefined === expected_result_type) {
 					void it(
-						`(new TokenScan(${
+						`(TokenScan.create(${
 							JSON.stringify(input_string)
 						})).parsed throws`,
 						() => {
@@ -203,7 +218,7 @@ void describe('TokenScan', () => {
 				} else {
 					not_undefined(expected_type_info);
 					void it(
-						`(new TokenScan(${
+						`(TokenScan.create(${
 							JSON.stringify(input_string)
 						})).parsed behaves`,
 						() => {
@@ -323,7 +338,7 @@ void describe('TokenScan', () => {
 			expectation,
 		] of data_sets) {
 			void it(
-				`(new TokenScan(${
+				`(TokenScan.create(${
 					input
 				})).${
 					method
@@ -337,7 +352,7 @@ void describe('TokenScan', () => {
 					expectation
 				}`,
 				() => {
-					const scan = new TokenScan(input);
+					const scan = TokenScan.create(input);
 					assert.strictEqual(
 						scan.valid,
 						true,
@@ -465,5 +480,98 @@ void describe('TokenScan', () => {
 				}
 			)
 		}
+	})
+
+	void describe('toJSON', () => {
+		const data_sets:[
+			string|TokenScan,
+			{
+				type: 'TokenScan',
+				value: string,
+			},
+			string,
+		][] = [
+			['1', {type: 'TokenScan', value: '1'}, '1'],
+			['1 - 2', {type: 'TokenScan', value: '1 - 2'}, '-1'],
+			['1-2', {type: 'TokenScan', value: '1-2'}, '-1'],
+			[
+				TokenScan.create('1').minus('2'),
+				{type: 'TokenScan', value: '1 - 2'},
+				'-1',
+			],
+		];
+
+		for (let index=0; index < data_sets.length; ++index) {
+			const [
+				input,
+				expectation_json,
+				expectation_resolve,
+			] = data_sets[index];
+
+			void it(`data set at index ${
+				index
+			} should resolve to ${
+				expectation_resolve
+			}, and provide JSON matching ${
+				JSON.stringify(expectation_json)
+			}`, () => {
+				const scan = is_string(input)
+					? TokenScan.create(input)
+					: input;
+
+				assert.strictEqual(
+					scan.valid,
+					true,
+					'Expecting scan to be valid!'
+				);
+
+				assert.strictEqual(
+					scan.resolve().toString(),
+					expectation_resolve,
+				);
+
+				assert.deepStrictEqual(
+					scan.toJSON(),
+					expectation_json,
+				);
+
+				const from_json = IntermediaryNumber.fromJson(
+					scan.toJSON()
+				);
+
+				TokenScan.require_is(from_json);
+
+				assert.strictEqual(
+					from_json.valid,
+					true,
+					'Expecting from_json to be valid!'
+				);
+
+				assert.strictEqual(
+					from_json.resolve().toString(),
+					expectation_resolve,
+				);
+
+				assert.deepStrictEqual(
+					from_json.toJSON(),
+					expectation_json,
+				);
+			})
+		}
+	})
+
+	void describe('require_is', () => {
+		void it('behaves', () => {
+			const from_string = TokenScan.create(
+				'1+1'
+			);
+			TokenScan.require_is(from_string);
+
+			assert.doesNotThrow(
+				() => TokenScan.require_is(from_string)
+			);
+
+			assert.throws(() => TokenScan.require_is(undefined));
+		})
 	})
 })

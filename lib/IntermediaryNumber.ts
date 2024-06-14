@@ -25,7 +25,8 @@ export const regex_recurring_number =
 
 export type CanDoMath_result_types =
 	| IntermediaryNumber
-	| IntermediaryCalculation;
+	| IntermediaryCalculation
+	| TokenScan;
 
 export type operation_types =
 	| '+'
@@ -37,7 +38,8 @@ export type operation_types =
 
 export type operand_type_property_types =
 	| type_property_types
-	| 'IntermediaryCalculation';
+	| 'IntermediaryCalculation'
+	| 'TokenScan';
 
 export type CanConvertTypeJson =
 	| {
@@ -49,6 +51,10 @@ export type CanConvertTypeJson =
 		left: CanConvertTypeJson,
 		operation: operation_types,
 		right: CanConvertTypeJson,
+	}
+	| {
+		type: 'TokenScan',
+		value: string,
 	};
 
 export type CanDoMathWithDispose_operator_types =
@@ -60,7 +66,8 @@ export type CanDoMathWithDispose_operator_types =
 
 export type operand_types =
 	| IntermediaryNumber
-	| IntermediaryCalculation;
+	| IntermediaryCalculation
+	| TokenScan;
 
 //#region TokenScan types
 
@@ -151,8 +158,7 @@ interface CanDoMath<
 	): ResultType;
 
 	abs(): (
-		| IntermediaryCalculation
-		| IntermediaryNumber
+		| operand_types
 	);
 
 	max(
@@ -623,6 +629,11 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 		return this.value.toString();
 	}
 
+	toStringCalculation()
+	{
+		return this.toString();
+	}
+
 	static create(
 		input: input_types
 	): IntermediaryNumber {
@@ -675,7 +686,7 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 		} else if (
 			/^(\d+|\d*\.\d+)\s*[+/*x%-]\s*(\d+|\d*\.\d+)$/.test(maybe)
 		) {
-			return (new TokenScan(input)).parsed;
+			return TokenScan.create(input).parsed;
 		}
 
 		const scientific = /^(-?\d+(?:\.\d+))e([+-])(\d+)$/.exec(maybe);
@@ -702,6 +713,8 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 	static fromJson(json:CanConvertTypeJson): CanDoMath_result_types {
 		if ('IntermediaryNumber' === json.type) {
 			return this.create(json.value);
+		} else if ('TokenScan' === json.type) {
+			return TokenScan.create(json.value);
 		}
 
 		return new IntermediaryCalculation(
@@ -720,6 +733,7 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 			(
 				(input instanceof IntermediaryNumber)
 				|| (input instanceof IntermediaryCalculation)
+				|| (input instanceof TokenScan)
 			)
 				? input
 				: this.create(input)
@@ -1033,6 +1047,7 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 	) : IntermediaryNumber {
 		if (
 			(operand instanceof IntermediaryCalculation)
+			|| (operand instanceof TokenScan)
 		) {
 			return operand.resolve();
 		} else if (
@@ -1052,7 +1067,7 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 	static fromString(
 		input:Exclude<string, ''>
 	): IntermediaryNumber|IntermediaryCalculation {
-		return (new TokenScan(input)).parsed;
+		return TokenScan.create(input).parsed;
 	}
 
 	static is(maybe: unknown): maybe is IntermediaryCalculation
@@ -1168,8 +1183,6 @@ const regex_numeric = (
 	/(?:\d*\.\d*\(\d+\)r?|\d*\.\d*\[\d+\]r?|\d+(?:\.\d+r)?|\.\d+r?)/g
 );
 
-// eslint-disable-next-line max-len
-// @todo add TokenScan to CanDoMath_result_types then return a new instance of TokenScan
 export class TokenScan implements CanResolveMathWithDispose
 {
 	private readonly internal:TokenScan_internals = {
@@ -1178,9 +1191,10 @@ export class TokenScan implements CanResolveMathWithDispose
 		valid: undefined,
 	};
 
-	readonly value:string;
+	readonly value:string|[TokenScan, operation_types, math_types];
 
-	constructor(value:string)
+	private constructor(
+		value:| string|[TokenScan, operation_types, math_types])
 	{
 		this.value = value;
 	}
@@ -1207,11 +1221,8 @@ export class TokenScan implements CanResolveMathWithDispose
 		return this.internal.tokens;
 	}
 
-	/**
-	 * @todo change to `return 'TokenScan';`
-	 */
 	get type(): operand_type_property_types {
-		throw new Error('Method not implemented.');
+		return 'TokenScan';
 	}
 
 	get valid(): boolean
@@ -1228,7 +1239,7 @@ export class TokenScan implements CanResolveMathWithDispose
 		return this.internal.valid;
 	}
 
-	abs(): IntermediaryNumber | IntermediaryCalculation {
+	abs() {
 		return this.parsed.abs();
 	}
 
@@ -1236,8 +1247,12 @@ export class TokenScan implements CanResolveMathWithDispose
 		return this.parsed.compare(value);
 	}
 
-	divide(value: math_types): CanDoMath_result_types {
-		return this.parsed.divide(value);
+	divide(value: math_types): TokenScan {
+		return new TokenScan([
+			this,
+			'/',
+			value,
+		]);
 	}
 
 	do_math_then_dispose(
@@ -1263,14 +1278,20 @@ export class TokenScan implements CanResolveMathWithDispose
 
 	isOne(): boolean {
 		return (
-			'1' === this.value.trim()
+			(
+				is_string(this.value)
+				&& '1' === this.value.trim()
+			)
 			|| this.parsed.isOne()
 		);
 	}
 
 	isZero(): boolean {
 		return (
-			'0' === this.value.trim()
+			(
+				is_string(this.value)
+				&& '0' === this.value.trim()
+			)
 			|| this.parsed.isZero()
 		);
 	}
@@ -1279,16 +1300,28 @@ export class TokenScan implements CanResolveMathWithDispose
 		return this.parsed.max(first, ...remaining);
 	}
 
-	minus(value: math_types): CanDoMath_result_types {
-		return this.parsed.minus(value);
+	minus(value: math_types): TokenScan {
+		return new TokenScan([
+			this,
+			'-',
+			value,
+		]);
 	}
 
-	modulo(value: math_types): CanDoMath_result_types {
-		return this.parsed.modulo(value);
+	modulo(value: math_types): TokenScan {
+		return new TokenScan([
+			this,
+			'%',
+			value,
+		]);
 	}
 
-	plus(value: math_types): CanDoMath_result_types {
-		return this.parsed.plus(value);
+	plus(value: math_types): TokenScan {
+		return new TokenScan([
+			this,
+			'+',
+			value,
+		]);
 	}
 
 	resolve(): IntermediaryNumber {
@@ -1297,8 +1330,12 @@ export class TokenScan implements CanResolveMathWithDispose
 		return IntermediaryCalculation.is(parsed) ? parsed.resolve() : parsed;
 	}
 
-	times(value: math_types): CanDoMath_result_types {
-		return this.parsed.times(value);
+	times(value: math_types): TokenScan {
+		return new TokenScan([
+			this,
+			'x',
+			value,
+		]);
 	}
 
 	toAmountString(): amount_string {
@@ -1317,11 +1354,11 @@ export class TokenScan implements CanResolveMathWithDispose
 		return this.parsed.toFraction();
 	}
 
-	/**
-	 * @todo implement
-	 */
 	toJSON(): CanConvertTypeJson {
-		throw new Error('Method not implemented.');
+		return {
+			type: 'TokenScan',
+			value: this.toStringCalculation(),
+		};
 	}
 
 	toString(): string {
@@ -1330,7 +1367,44 @@ export class TokenScan implements CanResolveMathWithDispose
 
 	toStringCalculation(): string
 	{
+		if (this.value instanceof Array) {
+			const left_operand = this.value[0];
+
+			return `${
+				(left_operand.parsed instanceof IntermediaryNumber)
+					? left_operand.toString()
+					: `(${
+						left_operand.toStringCalculation()
+					})`
+			} ${
+				this.value[1]
+			} ${
+				IntermediaryNumber.reuse_or_create(
+					this.value[2]
+				).toStringCalculation()
+			}`;
+		}
+
 		return this.value;
+	}
+
+	static create(value:string): TokenScan
+	{
+		return new TokenScan(value);
+	}
+
+	static is(maybe: unknown): maybe is TokenScan
+	{
+		return maybe instanceof TokenScan;
+	}
+
+	static require_is(maybe: unknown): asserts maybe is TokenScan
+	{
+		if (!this.is(maybe)) {
+			throw new Error(
+				'Argument is not an instanceof TokenScan'
+			);
+		}
 	}
 
 	private static determine_tokens_from_scan(
@@ -1339,7 +1413,9 @@ export class TokenScan implements CanResolveMathWithDispose
 
 		let tokens:TokenSpan<TokenSpan_types>[] = [];
 
-		for (const entry of scan.value.matchAll(/([\s]+)/g)) {
+		const value = scan.toStringCalculation();
+
+		for (const entry of value.matchAll(/([\s]+)/g)) {
 			tokens.push(new TokenSpan(
 				entry.index,
 				entry.index + entry[0].length,
@@ -1347,7 +1423,7 @@ export class TokenScan implements CanResolveMathWithDispose
 			));
 		}
 
-		for (const entry of scan.value.matchAll(regex_numeric)) {
+		for (const entry of value.matchAll(regex_numeric)) {
 			tokens.push(new TokenSpan(
 				entry.index,
 				entry.index + entry[0].length,
@@ -1355,7 +1431,7 @@ export class TokenScan implements CanResolveMathWithDispose
 			));
 		}
 
-		for (const entry of scan.value.matchAll(/([+/*x%-])/g)) {
+		for (const entry of value.matchAll(/([+/*x%-])/g)) {
 			tokens.push(new TokenSpan(
 				entry.index,
 				entry.index + entry[0].length,
@@ -1363,7 +1439,7 @@ export class TokenScan implements CanResolveMathWithDispose
 			));
 		}
 
-		for (const entry of scan.value.matchAll(/(\()/g)) {
+		for (const entry of value.matchAll(/(\()/g)) {
 			tokens.push(new TokenSpan(
 				entry.index,
 				entry.index + entry[0].length,
@@ -1371,7 +1447,7 @@ export class TokenScan implements CanResolveMathWithDispose
 			));
 		}
 
-		for (const entry of scan.value.matchAll(/(\))/g)) {
+		for (const entry of value.matchAll(/(\))/g)) {
 			tokens.push(new TokenSpan(
 				entry.index,
 				entry.index + entry[0].length,
@@ -1386,7 +1462,7 @@ export class TokenScan implements CanResolveMathWithDispose
 		const recursive_numerics = tokens.filter(
 			maybe => (
 				'numeric' === maybe.type
-				&& /[()]/.test(scan.value.substring(maybe.from, maybe.to))
+				&& /[()]/.test(value.substring(maybe.from, maybe.to))
 			)
 		);
 
@@ -1412,7 +1488,7 @@ export class TokenScan implements CanResolveMathWithDispose
 			throw new TokenScanError('No tokens found!')
 		} else if (0 !== tokens[0].from) {
 			throw new TokenScanError('First token not at index 0!')
-		} else if (scan.value.length !== tokens[tokens.length - 1].to) {
+		} else if (value.length !== tokens[tokens.length - 1].to) {
 			throw new TokenScanError(
 				'Last token does not end at end of string!'
 			)
@@ -1461,6 +1537,8 @@ export class TokenScan implements CanResolveMathWithDispose
 	): Exclude<TokenScan_internals['tokens'], undefined> {
 		const smoosh_numerics:number[] = [];
 
+		const value = scan.toStringCalculation();
+
 		for (
 			let token_index=tokens.length - 1; token_index > 0; --token_index
 		) {
@@ -1468,11 +1546,11 @@ export class TokenScan implements CanResolveMathWithDispose
 			const current = tokens[token_index];
 
 			if ('numeric' === previous.type) {
-				const previous_value = scan.value.substring(
+				const previous_value = value.substring(
 					previous.from,
 					previous.to
 				);
-				const current_value = scan.value.substring(
+				const current_value = value.substring(
 					current.from,
 					current.to
 				);
@@ -1503,7 +1581,7 @@ export class TokenScan implements CanResolveMathWithDispose
 		if (
 			tokens.length >= 2
 			&& 'operation' === tokens[0].type
-			&& '-' === scan.value[tokens[0].from]
+			&& '-' === value[tokens[0].from]
 			&& 'numeric' === tokens[1].type
 		) {
 			convert_to_negative.push(0);
@@ -1524,7 +1602,7 @@ export class TokenScan implements CanResolveMathWithDispose
 				&& next
 				&& after
 				&& 'operation' === next.type
-				&& '-' === scan.value[next.from]
+				&& '-' === value[next.from]
 				&& 'numeric' === after.type
 			) {
 				convert_to_negative.push(token_index + 1);
@@ -1587,6 +1665,8 @@ export class TokenScan implements CanResolveMathWithDispose
 		is:TokenSpan<TokenSpan_types_part_baked>,
 		index:number,
 	): TokenScan_tokenizer {
+		const value = scan.toStringCalculation();
+
 		if (is_nesting_open(is)) {
 			if ('right' === was.operand_mode) {
 				if (undefined === was.left_operand) {
@@ -1689,7 +1769,7 @@ export class TokenScan implements CanResolveMathWithDispose
 		} else if (is_numeric(is)) {
 			if ('left' === was.operand_mode) {
 				was.left_operand = IntermediaryNumber.create(
-					scan.value.substring(
+					value.substring(
 						is.from,
 						is.to
 					)
@@ -1715,7 +1795,7 @@ export class TokenScan implements CanResolveMathWithDispose
 				let resolved = new IntermediaryCalculation(
 					was.left_operand,
 					was.operation,
-					IntermediaryNumber.create(scan.value.substring(
+					IntermediaryNumber.create(value.substring(
 						is.from,
 						is.to
 					)),
@@ -1762,7 +1842,7 @@ export class TokenScan implements CanResolveMathWithDispose
 					is
 				)
 			}
-			const maybe = scan.value.substring(is.from, is.to);
+			const maybe = value.substring(is.from, is.to);
 			is_operation_value(maybe);
 
 			was.operation = maybe;

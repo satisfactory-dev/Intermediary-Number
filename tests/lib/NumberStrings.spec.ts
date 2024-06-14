@@ -13,6 +13,7 @@ import {
 	IntermediaryNumber,
 	number_arg,
 	operand_types,
+	TokenScan,
 } from '../../index';
 
 void describe('NumberStrings', () => {
@@ -87,6 +88,7 @@ void describe('NumberStrings', () => {
 							(
 								(input instanceof IntermediaryNumber)
 								|| (input instanceof IntermediaryCalculation)
+								|| (input instanceof TokenScan)
 							)
 								? input
 								: BigNumber(input)
