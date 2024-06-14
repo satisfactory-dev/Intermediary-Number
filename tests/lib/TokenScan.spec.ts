@@ -5,7 +5,7 @@ import {
 import assert from 'node:assert/strict';
 import {
 	TokenScan,
-} from '../../lib/TokenScan';
+} from '../../lib/IntermediaryNumber';
 import {
 	expand_fraction_string,
 	expand_ignore_characters,
