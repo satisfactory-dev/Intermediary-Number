@@ -12,7 +12,6 @@ import {
 	IntermediaryCalculation,
 	IntermediaryNumber,
 	math_types,
-	operation_types,
 	TokenScan,
 } from '../../lib/IntermediaryNumber';
 import {
