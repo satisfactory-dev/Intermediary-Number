@@ -1248,6 +1248,10 @@ export class TokenScan implements CanResolveMathWithDispose
 	}
 
 	divide(value: math_types): TokenScan {
+		if (IntermediaryNumber.reuse_or_create(value).isOne()) {
+			return this;
+		}
+
 		return new TokenScan([
 			this,
 			'/',
@@ -1301,6 +1305,10 @@ export class TokenScan implements CanResolveMathWithDispose
 	}
 
 	minus(value: math_types): TokenScan {
+		if (IntermediaryNumber.reuse_or_create(value).isZero()) {
+			return this;
+		}
+
 		return new TokenScan([
 			this,
 			'-',
@@ -1317,6 +1325,10 @@ export class TokenScan implements CanResolveMathWithDispose
 	}
 
 	plus(value: math_types): TokenScan {
+		if (IntermediaryNumber.reuse_or_create(value).isZero()) {
+			return this;
+		}
+
 		return new TokenScan([
 			this,
 			'+',
@@ -1331,6 +1343,10 @@ export class TokenScan implements CanResolveMathWithDispose
 	}
 
 	times(value: math_types): TokenScan {
+		if (IntermediaryNumber.reuse_or_create(value).isOne()) {
+			return this;
+		}
+
 		return new TokenScan([
 			this,
 			'x',

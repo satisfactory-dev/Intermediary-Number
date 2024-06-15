@@ -12,6 +12,7 @@ import {
 	IntermediaryCalculation,
 	IntermediaryNumber,
 	math_types,
+	operation_types,
 	TokenScan,
 } from '../../lib/IntermediaryNumber';
 import {
@@ -557,6 +558,66 @@ void describe('TokenScan', () => {
 					expectation_json,
 				);
 			})
+		}
+	})
+
+	void describe('toStringCalculation', () => {
+		const data_sets:[
+			string,
+			CanDoMathWithDispose_operator_types,
+			math_types,
+			string,
+		][] = [
+			['1+2+3', 'times', 1, '1+2+3'],
+			['1+2+3', 'divide', 1, '1+2+3'],
+			['1+2+3', 'minus', 0, '1+2+3'],
+			['1+2+3', 'plus', 0, '1+2+3'],
+		];
+
+		for (const [
+			input,
+			operation,
+			argument,
+			expectation,
+		] of data_sets) {
+			void it(
+				`TokenScan.create(${
+					JSON.stringify(input)
+				}).${
+					operation
+				}(${
+					JSON.stringify(argument)
+				}) === ${
+					JSON.stringify(expectation)
+				}`,
+				() => {
+					const scan = TokenScan.create(input);
+
+					assert.strictEqual(
+						scan.valid,
+						true,
+						`Expecting TokenScan.create(${
+							JSON.stringify(input)
+						}).valid === true`
+					)
+
+					const altered = scan[operation](argument);
+
+					assert.strictEqual(
+						altered.toStringCalculation(),
+						expectation
+					)
+
+					if (input === expectation) {
+						assert.strictEqual(
+							scan,
+							altered,
+							// eslint-disable-next-line max-len
+							'If input equals expectation, scan and altered should be the same instance!'
+						)
+					}
+				}
+			)
 		}
 	})
 
