@@ -1385,6 +1385,9 @@ export class TokenScan implements CanResolveMathWithDispose
 	{
 		if (this.value instanceof Array) {
 			const left_operand = this.value[0];
+			const right_operand = IntermediaryNumber.reuse_or_create(
+				this.value[2]
+			);
 
 			return `${
 				(left_operand.parsed instanceof IntermediaryNumber)
@@ -1395,9 +1398,9 @@ export class TokenScan implements CanResolveMathWithDispose
 			} ${
 				this.value[1]
 			} ${
-				IntermediaryNumber.reuse_or_create(
-					this.value[2]
-				).toStringCalculation()
+				(right_operand instanceof IntermediaryNumber)
+					? right_operand.toStringCalculation()
+					: `(${right_operand.toStringCalculation()})`
 			}`;
 		}
 

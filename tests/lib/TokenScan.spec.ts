@@ -328,6 +328,14 @@ void describe('TokenScan', () => {
 			['1+2/3', ['toStringCalculation'], '1+2/3'],
 			['1 + 2 / 3', ['toStringCalculation'], '1 + 2 / 3'],
 			['1+ 2 / 3', ['toStringCalculation'], '1+ 2 / 3'],
+			[
+				'(11 * (15*0.707143) * 1)',
+				[
+					'minus',
+					TokenScan.create('11 * (15*0.707143)'),
+				],
+				'0',
+			],
 		];
 
 		for (const [
