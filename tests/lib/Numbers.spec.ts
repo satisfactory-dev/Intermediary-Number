@@ -6,7 +6,7 @@ import assert from 'node:assert/strict';
 import Fraction from 'fraction.js';
 import {
 	is_instanceof,
-} from '@satisfactory-clips-archive/custom-assert/assert/CustomAssert';
+} from '@satisfactory-clips-archive/custom-assert';
 
 import {
 	math_types,

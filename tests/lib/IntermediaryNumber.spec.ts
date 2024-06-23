@@ -7,7 +7,7 @@ import Fraction from 'fraction.js';
 import BigNumber from 'bignumber.js';
 import {
 	not_undefined,
-} from '@satisfactory-clips-archive/custom-assert/assert/CustomAssert';
+} from '@satisfactory-clips-archive/custom-assert';
 
 import {
 	CanConvertType,

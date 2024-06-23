@@ -22,7 +22,7 @@
 		"typescript-eslint": "^7.13.0"
 	},
 	"dependencies": {
-		"@satisfactory-clips-archive/custom-assert": "^0.1.2",
+		"@satisfactory-clips-archive/custom-assert": "^0.1.4",
 		"bignumber.js": "^9.1.2",
 		"fraction.js": "^4.3.7"
 	}
