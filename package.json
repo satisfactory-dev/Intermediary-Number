@@ -18,11 +18,11 @@
 		"glob": "^10.4.1",
 		"prettier": "^3.3.2",
 		"ts-node": "^10.9.2",
-		"typescript": "~5.4.5",
+		"typescript": "~5.5.2",
 		"typescript-eslint": "^7.13.0"
 	},
 	"dependencies": {
-		"@satisfactory-clips-archive/custom-assert": "^0.1.4",
+		"@satisfactory-clips-archive/custom-assert": "^0.2.1",
 		"bignumber.js": "^9.1.2",
 		"fraction.js": "^4.3.7"
 	}
