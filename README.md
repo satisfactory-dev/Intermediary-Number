@@ -3,7 +3,7 @@
 
 # Intermediary Number
 
-Intermediary Number classes & utilities for the [Production Calculator](https://github.com/SignpostMarv/Satisfactory-Production-Calculator) for Satisfactory built upon [Docs.json.ts](https://github.com/satisfactory-dev/Docs.json.ts).
+Intermediary Number classes & utilities for the [Production Calculator](https://github.com/satifactory-dev/Satisfactory-Production-Calculator) for Satisfactory built upon [Docs.json.ts](https://github.com/satisfactory-dev/Docs.json.ts).
 
 ## Using
 
