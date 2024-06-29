@@ -5,7 +5,7 @@ import {
 import assert from 'node:assert/strict';
 import {
 	not_undefined,
-} from '@satisfactory-clips-archive/custom-assert';
+} from '@satisfactory-dev/custom-assert';
 
 import {
 	CanDoMathWithDispose_operator_types,
