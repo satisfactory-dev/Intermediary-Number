@@ -415,7 +415,7 @@ function is_numeric(
 	return 'numeric' === maybe.type;
 }
 
-function is_operation_value(
+export function is_operation_value(
 	maybe: string,
 ): asserts maybe is operation_types {
 	if (

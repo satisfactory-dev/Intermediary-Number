@@ -19,6 +19,7 @@ import {
 	NotValid,
 	NumberStrings,
 	operand_types,
+	TokenScan,
 	type_property_types,
 } from '../../index';
 
@@ -396,29 +397,159 @@ void describe('IntermediaryCalculation', () => {
 	})
 
 	void describe('max', () => {
-		void it('beahaves', () => {
-			assert.strictEqual(
-				(new IntermediaryCalculation(
-					IntermediaryNumber.One,
-					'+',
-					IntermediaryNumber.One,
-				)).max(3, 4, 5).toString(),
+		const data_sets:[
+			[
+				IntermediaryNumber,
+				IntermediaryCalculation,
+				TokenScan,
+			],
+			[math_types, ...math_types[]],
+			string,
+		][] = [
+			[
+				[
+					IntermediaryNumber.create(5),
+					new IntermediaryCalculation(
+						IntermediaryNumber.One,
+						'+',
+						IntermediaryNumber.create(4),
+					),
+					TokenScan.create('1 + 4'),
+				],
+				[2, 3, 4],
 				'5',
-			)
-		})
+			],
+			[
+				[
+					IntermediaryNumber.create(2),
+					new IntermediaryCalculation(
+						IntermediaryNumber.One,
+						'+',
+						IntermediaryNumber.One,
+					),
+					TokenScan.create('1 + 1'),
+				],
+				[3, 4, 5],
+				'5',
+			],
+		];
+
+		for (let index = 0; index < data_sets.length; ++index) {
+			const [
+				[
+					number_implementation,
+					calculation_implementation,
+					tokenscan_implementation,
+				],
+				additional_args,
+				expectation,
+			] = data_sets[index];
+
+			void it(`IntermediaryNumber.max() behaves with dataset ${index}`, () => {
+				assert.strictEqual(
+					number_implementation.max(
+						...additional_args,
+					).toString(),
+					expectation,
+				);
+			});
+
+			void it(`IntermediaryCalculation.max() behaves with dataset ${index}`, () => {
+				assert.strictEqual(
+					calculation_implementation.max(
+						...additional_args,
+					).toString(),
+					expectation,
+				);
+			});
+
+			void it(`TokenScan.max() behaves with dataset ${index}`, () => {
+				assert.strictEqual(
+					tokenscan_implementation.max(
+						...additional_args,
+					).toString(),
+					expectation,
+				);
+			});
+		}
 	})
 
 	void describe('min', () => {
-		void it('beahaves', () => {
-			assert.strictEqual(
-				(new IntermediaryCalculation(
-					IntermediaryNumber.One,
-					'+',
-					IntermediaryNumber.One,
-				)).min(3, 4, 5).toString(),
+		const data_sets:[
+			[
+				IntermediaryNumber,
+				IntermediaryCalculation,
+				TokenScan,
+			],
+			[math_types, ...math_types[]],
+			string,
+		][] = [
+			[
+				[
+					IntermediaryNumber.create(2),
+					new IntermediaryCalculation(
+						IntermediaryNumber.One,
+						'+',
+						IntermediaryNumber.One,
+					),
+					TokenScan.create('1 + 1'),
+				],
+				[3, 4, 5],
 				'2',
-			)
-		})
+			],
+			[
+				[
+					IntermediaryNumber.create(3),
+					new IntermediaryCalculation(
+						IntermediaryNumber.One,
+						'+',
+						IntermediaryNumber.create(2),
+					),
+					TokenScan.create('1 + 2'),
+				],
+				[2, 4, 5],
+				'2',
+			],
+		];
+
+		for (let index = 0; index < data_sets.length; ++index) {
+			const [
+				[
+					number_implementation,
+					calculation_implementation,
+					tokenscan_implementation,
+				],
+				additional_args,
+				expectation,
+			] = data_sets[index];
+
+			void it(`IntermediaryNumber.max() behaves with dataset ${index}`, () => {
+				assert.strictEqual(
+					number_implementation.min(
+						...additional_args,
+					).toString(),
+					expectation,
+				);
+			});
+
+			void it(`IntermediaryCalculation.max() behaves with dataset ${index}`, () => {
+				assert.strictEqual(
+					calculation_implementation.min(
+						...additional_args,
+					).toString(),
+					expectation,
+				);
+			});
+
+			void it(`TokenScan.max() behaves with dataset ${index}`, () => {
+				assert.strictEqual(
+					tokenscan_implementation.min(
+						...additional_args,
+					).toString(),
+					expectation,
+				);
+			});
+		}
 	})
 
 	void describe('plus', () => {

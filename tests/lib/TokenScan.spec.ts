@@ -11,7 +11,9 @@ import {
 	CanDoMathWithDispose_operator_types,
 	IntermediaryCalculation,
 	IntermediaryNumber,
+	is_operation_value,
 	math_types,
+	operation_types,
 	TokenScan,
 } from '../../lib/IntermediaryNumber';
 import {
@@ -164,6 +166,33 @@ const from_string_data_sets_throwing:[
 	['(\t)'],
 	['11 * ()'],
 ];
+
+void describe('is_operation_value', () => {
+	void it('throws', () => {
+		assert.throws(() => {
+			is_operation_value('lolnope')
+		})
+	})
+
+	const data_sets:[operation_types][] = [
+		['%'],
+		['*'],
+		['+'],
+		['-'],
+		['/'],
+		['x'],
+	];
+
+	for (const [
+		operation,
+	] of data_sets) {
+		void it(`does not throw for ${operation}`, () => {
+			assert.doesNotThrow(() => {
+				is_operation_value(operation)
+			})
+		})
+	}
+});
 
 void describe('TokenScan', () => {
 	void describe('parse', () => {
