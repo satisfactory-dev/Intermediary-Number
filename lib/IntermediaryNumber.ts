@@ -164,12 +164,12 @@ interface CanDoMath<
 	max(
 		first: math_types,
 		...remaining: math_types[]
-	): math_types;
+	): operand_types;
 
 	min(
 		first: math_types,
 		...remaining: math_types[]
-	): math_types;
+	): operand_types;
 }
 
 interface CanResolveMath<
@@ -355,7 +355,7 @@ function max(
 	first: math_types,
 	second: math_types,
 	...remaining: math_types[]
-): math_types {
+): operand_types {
 	let max = IntermediaryNumber.reuse_or_create(first);
 
 	for (const entry of [second, ...remaining]) {
@@ -372,7 +372,7 @@ function min(
 	first: math_types,
 	second: math_types,
 	...remaining: math_types[]
-): math_types {
+): operand_types {
 	let min = IntermediaryNumber.reuse_or_create(first);
 
 	for (const entry of [second, ...remaining]) {
@@ -513,14 +513,14 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 	max(
 		first: math_types,
 		...remaining: math_types[]
-	): math_types {
+	): operand_types {
 		return max(this, first, ...remaining);
 	}
 
 	min(
 		first: math_types,
 		...remaining: math_types[]
-	): math_types {
+	): operand_types {
 		return min(this, first, ...remaining);
 	}
 
@@ -905,14 +905,14 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 	max(
 		first: math_types,
 		...remaining: math_types[]
-	): math_types {
+	): operand_types {
 		return max(this, first, ...remaining);
 	}
 
 	min(
 		first: math_types,
 		...remaining: math_types[]
-	): math_types {
+	): operand_types {
 		return min(this, first, ...remaining);
 	}
 
@@ -1334,11 +1334,11 @@ export class TokenScan implements CanResolveMathWithDispose
 		);
 	}
 
-	max(first: math_types, ...remaining: math_types[]): math_types {
+	max(first: math_types, ...remaining: math_types[]): operand_types {
 		return this.parsed.max(first, ...remaining);
 	}
 
-	min(first: math_types, ...remaining: math_types[]): math_types {
+	min(first: math_types, ...remaining: math_types[]): operand_types {
 		return this.parsed.min(first, ...remaining);
 	}
 
