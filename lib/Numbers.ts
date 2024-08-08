@@ -30,7 +30,7 @@ export class Numbers
 	static divide_if_not_one(
 		left:math_types,
 		right:Fraction,
-		require_fraction:boolean
+		require_fraction:boolean,
 	): Fraction|math_types {
 		const result = (0 === right.compare(1))
 			? left
@@ -59,40 +59,42 @@ export class Numbers
 				| number_arg
 				| operand_types
 			)[]
-		]
+		],
 	): (
 		| Fraction
 	) {
 		if (2 === numbers.length) {
 			return (
 				IntermediaryNumber.reuse_or_create(
-					numbers[0]
+					numbers[0],
 				).toFraction().lcm(
-					IntermediaryNumber.reuse_or_create(numbers[1]).toFraction()
+					IntermediaryNumber.reuse_or_create(
+						numbers[1],
+					).toFraction(),
 				)
 			);
 		}
 
 		return (numbers.map(
-			e => IntermediaryNumber.reuse_or_create(e).toFraction()
+			e => IntermediaryNumber.reuse_or_create(e).toFraction(),
 		).reduce(
 			// based on https://www.npmjs.com/package/mlcm?activeTab=code
 			(was, is) => {
 				return was.mul(is).abs().div(
-					was.gcd(is)
+					was.gcd(is),
 				);
-			}
+			},
 		));
 	}
 
 	static sum_series_fraction(
 		a:Fraction,
-		b:Fraction
+		b:Fraction,
 	) : Fraction {
 		assert.strictEqual(
 			b.compare(a),
 			-1,
-			`Expecting ${b.toString()} to be less than ${a.toString()}`
+			`Expecting ${b.toString()} to be less than ${a.toString()}`,
 		);
 
 		// adapted from @stdlib/math-base-tools-sum-series

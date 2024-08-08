@@ -62,26 +62,26 @@ void describe('Numbers', () => {
 					const require_fraction = Numbers.divide_if_not_one(
 						left,
 						right,
-						true
+						true,
 					);
 					const fraction_not_required = Numbers.divide_if_not_one(
 						left,
 						right,
-						false
+						false,
 					);
 
 					assert.strictEqual(
 						require_fraction.toString(),
-						expectation
+						expectation,
 					);
 
 					is_instanceof(require_fraction, Fraction);
 
 					assert.strictEqual(
 						fraction_not_required.toString(),
-						expectation
+						expectation,
 					);
-				}
+				},
 			)
 		}
 	})
@@ -114,11 +114,11 @@ void describe('Numbers', () => {
 				() => {
 					assert.equal(
 						(new Fraction(expectation)).compare(
-							Numbers.least_common_multiple_deferred(numbers)
+							Numbers.least_common_multiple_deferred(numbers),
 						),
-						0
+						0,
 					);
-				}
+				},
 			)
 		}
 	})
@@ -127,11 +127,11 @@ void describe('Numbers', () => {
 		void it('throws if a is less than or equal to b', () => {
 			assert.throws(() => Numbers.sum_series_fraction(
 				new Fraction(1),
-				new Fraction(1)
+				new Fraction(1),
 			));
 			assert.throws(() => Numbers.sum_series_fraction(
 				new Fraction(0.5),
-				new Fraction(1)
+				new Fraction(1),
 			));
 		})
 
@@ -159,11 +159,11 @@ void describe('Numbers', () => {
 				() => {
 					assert.strictEqual(
 						Numbers.sum_series_fraction(a, b).compare(
-							expectation
+							expectation,
 						),
-						0
+						0,
 					);
-				}
+				},
 			)
 		}
 	})

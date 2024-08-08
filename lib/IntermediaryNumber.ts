@@ -232,18 +232,18 @@ interface CanResolveMathWithDispose<
 function do_math(
 	left_operand: IntermediaryNumber|IntermediaryCalculation,
 	operator: operation_types,
-	right_operand: math_types
+	right_operand: math_types,
 ) : operand_types {
 	return IntermediaryCalculation.maybe_reduce_operands(
 		left_operand,
 		operator,
-		IntermediaryNumber.reuse_or_create(right_operand)
+		IntermediaryNumber.reuse_or_create(right_operand),
 	);
 }
 
 function abs(
 	value:
-		| operand_types
+		| operand_types,
 ): operand_types {
 	if (value.isZero()) {
 		return value;
@@ -251,7 +251,7 @@ function abs(
 
 	return (value.isLessThan(0)
 		? IntermediaryNumber.Zero.minus(
-			value
+			value,
 		)
 		: value
 	);
@@ -259,10 +259,10 @@ function abs(
 
 function compare(
 	value: math_types,
-	to: CanConvertType
+	to: CanConvertType,
 ): 0|1|-1 {
 	const comparable = IntermediaryNumber.reuse_or_create(
-		value
+		value,
 	).toBigNumberOrFraction();
 
 	let result:number|null;
@@ -280,7 +280,7 @@ function compare(
 			|| 1 === result
 		),
 		true,
-		`Expecting -1, 0, or 1, receieved ${JSON.stringify(result)}`
+		`Expecting -1, 0, or 1, receieved ${JSON.stringify(result)}`,
 	);
 
 	return result as -1|0|1;
@@ -398,25 +398,25 @@ function default_tokenizer_state(): TokenScan_tokenizer {
 }
 
 function is_nesting_open(
-	maybe: TokenSpan<TokenSpan_types>
+	maybe: TokenSpan<TokenSpan_types>,
 ): maybe is TokenSpan<'nesting_open'> {
 	return 'nesting_open' === maybe.type;
 }
 
 function is_nesting_close(
-	maybe: TokenSpan<TokenSpan_types>
+	maybe: TokenSpan<TokenSpan_types>,
 ): maybe is TokenSpan<'nesting_close'> {
 	return 'nesting_close' === maybe.type;
 }
 
 function is_numeric(
-	maybe: TokenSpan<TokenSpan_types>
+	maybe: TokenSpan<TokenSpan_types>,
 ): maybe is TokenSpan<'numeric'> {
 	return 'numeric' === maybe.type;
 }
 
 function is_operation_value(
-	maybe: string
+	maybe: string,
 ): asserts maybe is operation_types {
 	if (
 		! (
@@ -425,7 +425,7 @@ function is_operation_value(
 		)
 	) {
 		throw new TokenScanError(
-			`Expected operation value, found "${maybe}"`
+			`Expected operation value, found "${maybe}"`,
 		)
 	}
 }
@@ -482,7 +482,7 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 
 	do_math_then_dispose(
 		operator: CanDoMathWithDispose_operator_types,
-		right_operand: math_types
+		right_operand: math_types,
 	): CanDoMath_result_types {
 		const result = this[operator](right_operand);
 
@@ -664,7 +664,7 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 	}
 
 	static create(
-		input: input_types
+		input: input_types,
 	): IntermediaryNumber {
 		if ('' === input) {
 			return IntermediaryNumber.Zero;
@@ -703,7 +703,7 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 	}
 
 	static create_if_valid(
-		input:string
+		input:string,
 	): operand_types|NotValid {
 		const maybe = input.trim();
 
@@ -728,7 +728,7 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 			).toBigNumber();
 
 			return IntermediaryNumber.create(scientific[1]).times(
-				(new BigNumber(10)).pow(calc)
+				(new BigNumber(10)).pow(calc),
 			);
 		}
 
@@ -749,14 +749,14 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 		return new IntermediaryCalculation(
 			this.fromJson(json.left),
 			json.operation,
-			this.fromJson(json.right)
+			this.fromJson(json.right),
 		);
 	}
 
 	static reuse_or_create(
 		input:
 			| operand_types
-			| input_types
+			| input_types,
 	): operand_types {
 		return (
 			(
@@ -825,7 +825,7 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 	constructor(
 		left:operand_types,
 		operation:operation_types,
-		right:operand_types
+		right:operand_types,
 	) {
 		this.left_operand = left;
 		this.operation = operation;
@@ -875,7 +875,7 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 
 	do_math_then_dispose(
 		operator: CanDoMathWithDispose_operator_types,
-		right_operand: math_types
+		right_operand: math_types,
 	): CanDoMath_result_types {
 		const result = this[operator](right_operand);
 
@@ -938,10 +938,10 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 	resolve(): IntermediaryNumber
 	{
 		const left_operand = this.operand_to_IntermediaryNumber(
-			this.left_operand
+			this.left_operand,
 		);
 		const right_operand = this.operand_to_IntermediaryNumber(
-			this.right_operand
+			this.right_operand,
 		);
 		const left = left_operand.toBigNumberOrFraction();
 		const right = right_operand.toBigNumberOrFraction();
@@ -962,16 +962,16 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 						(right instanceof BigNumber)
 							? right_operand.toFraction()
 							: right
-					)
-				)
+					),
+				),
 			);
 		}
 
 		return IntermediaryNumber.create(
 			BigNumber_operation_map[this.operation](
 				left,
-				right
-			)
+				right,
+			),
 		);
 	}
 
@@ -1025,17 +1025,17 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 
 	toJSON(): CanConvertTypeJson {
 		const left = this.operand_to_IntermediaryNumber(
-			this.left_operand
+			this.left_operand,
 		);
 
 		const right = this.operand_to_IntermediaryNumber(
-			this.right_operand
+			this.right_operand,
 		);
 
 		const maybe = IntermediaryCalculation.maybe_short_circuit(
 			left,
 			this.operation,
-			right
+			right,
 		);
 
 		if (maybe) {
@@ -1079,7 +1079,7 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 	}
 
 	private operand_to_IntermediaryNumber(
-		operand:operand_types
+		operand:operand_types,
 	) : IntermediaryNumber {
 		if (
 			(operand instanceof IntermediaryCalculation)
@@ -1093,7 +1093,7 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 			return IntermediaryNumber.create(
 				'/' === this.operation
 					? operand.toFraction()
-					: operand.toBigNumberOrFraction()
+					: operand.toBigNumberOrFraction(),
 			);
 		}
 
@@ -1101,7 +1101,7 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 	}
 
 	static fromString(
-		input:Exclude<string, ''>
+		input:Exclude<string, ''>,
 	): IntermediaryNumber|IntermediaryCalculation {
 		return TokenScan.create(input).parsed;
 	}
@@ -1114,12 +1114,12 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 	static maybe_reduce_operands(
 		left:operand_types,
 		operation:operation_types,
-		right:operand_types
+		right:operand_types,
 	) {
 		let value:operand_types|undefined = this.maybe_short_circuit(
 			left,
 			operation,
-			right
+			right,
 		);
 
 		if (undefined === value) {
@@ -1137,7 +1137,7 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 	{
 		if (!this.is(maybe)) {
 			throw new Error(
-				'Argument is not an instanceof IntermediaryCalculation'
+				'Argument is not an instanceof IntermediaryCalculation',
 			);
 		}
 	}
@@ -1145,7 +1145,7 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 	private static maybe_short_circuit(
 		left:operand_types,
 		operation:operation_types,
-		right:operand_types
+		right:operand_types,
 	) {
 		let value:operand_types|undefined = undefined;
 
@@ -1205,7 +1205,7 @@ export class TokenScanParseError extends Error
 		message:string,
 		scan: TokenScan_parsing_value,
 		state: TokenScan_tokenizer,
-		current?: TokenSpan<TokenSpan_types>
+		current?: TokenSpan<TokenSpan_types>,
 	) {
 		super(message);
 
@@ -1297,11 +1297,11 @@ export class TokenScan implements CanResolveMathWithDispose
 
 	do_math_then_dispose(
 		operator: CanDoMathWithDispose_operator_types,
-		right_operand: math_types
+		right_operand: math_types,
 	): CanDoMath_result_types {
 		const result = this.parsed.do_math_then_dispose(
 			operator,
-			right_operand
+			right_operand,
 		);
 		this.internal.parsed = undefined;
 
@@ -1426,7 +1426,7 @@ export class TokenScan implements CanResolveMathWithDispose
 		if (this.value instanceof Array) {
 			const left_operand = this.value[0];
 			const right_operand = IntermediaryNumber.reuse_or_create(
-				this.value[2]
+				this.value[2],
 			);
 
 			return `${
@@ -1461,13 +1461,13 @@ export class TokenScan implements CanResolveMathWithDispose
 	{
 		if (!this.is(maybe)) {
 			throw new Error(
-				'Argument is not an instanceof TokenScan'
+				'Argument is not an instanceof TokenScan',
 			);
 		}
 	}
 
 	private static determine_tokens_from_scan(
-		scan: TokenScan_parsing_tokens
+		scan: TokenScan_parsing_tokens,
 	): Exclude<TokenScan_internals['tokens'], undefined> {
 
 		let tokens:TokenSpan<TokenSpan_types>[] = [];
@@ -1478,7 +1478,7 @@ export class TokenScan implements CanResolveMathWithDispose
 			tokens.push(new TokenSpan(
 				entry.index,
 				entry.index + entry[0].length,
-				'ignore'
+				'ignore',
 			));
 		}
 
@@ -1486,7 +1486,7 @@ export class TokenScan implements CanResolveMathWithDispose
 			tokens.push(new TokenSpan(
 				entry.index,
 				entry.index + entry[0].length,
-				'numeric'
+				'numeric',
 			));
 		}
 
@@ -1494,7 +1494,7 @@ export class TokenScan implements CanResolveMathWithDispose
 			tokens.push(new TokenSpan(
 				entry.index,
 				entry.index + entry[0].length,
-				'operation'
+				'operation',
 			));
 		}
 
@@ -1502,7 +1502,7 @@ export class TokenScan implements CanResolveMathWithDispose
 			tokens.push(new TokenSpan(
 				entry.index,
 				entry.index + entry[0].length,
-				'nesting_open'
+				'nesting_open',
 			));
 		}
 
@@ -1510,7 +1510,7 @@ export class TokenScan implements CanResolveMathWithDispose
 			tokens.push(new TokenSpan(
 				entry.index,
 				entry.index + entry[0].length,
-				'nesting_close'
+				'nesting_close',
 			));
 		}
 
@@ -1522,7 +1522,7 @@ export class TokenScan implements CanResolveMathWithDispose
 			maybe => (
 				'numeric' === maybe.type
 				&& /[()]/.test(value.substring(maybe.from, maybe.to))
-			)
+			),
 		);
 
 		tokens = tokens.filter(
@@ -1535,12 +1535,12 @@ export class TokenScan implements CanResolveMathWithDispose
 						maybe_numeric => (
 							maybe.from >= maybe_numeric.from
 							&& maybe.to <= maybe_numeric.to
-						)
+						),
 					)
 				}
 
 				return true;
-			}
+			},
 		);
 
 		if (tokens.length < 1) {
@@ -1549,7 +1549,7 @@ export class TokenScan implements CanResolveMathWithDispose
 			throw new TokenScanError('First token not at index 0!')
 		} else if (value.length !== tokens[tokens.length - 1].to) {
 			throw new TokenScanError(
-				'Last token does not end at end of string!'
+				'Last token does not end at end of string!',
 			)
 		}
 
@@ -1569,14 +1569,14 @@ export class TokenScan implements CanResolveMathWithDispose
 			) {
 				console.error(tokens, index);
 				throw new TokenScanError(
-					`Token expected to be found at index ${index}`
+					`Token expected to be found at index ${index}`,
 				)
 			}
 		}
 
 		if (0 !== nesting_balance) {
 			throw new TokenScanError(
-				'Imbalanced nesting in string!'
+				'Imbalanced nesting in string!',
 			);
 		}
 
@@ -1585,14 +1585,14 @@ export class TokenScan implements CanResolveMathWithDispose
 			tokens.filter(
 				(maybe): maybe is TokenSpan<
 					TokenSpan_types_part_baked
-				> => 'ignore' !== maybe.type
-			)
+				> => 'ignore' !== maybe.type,
+			),
 		);
 	}
 
 	private static massage_part_baked_tokens(
 		scan: TokenScan_parsing_tokens,
-		tokens: Exclude<TokenScan_internals['tokens'], undefined>
+		tokens: Exclude<TokenScan_internals['tokens'], undefined>,
 	): Exclude<TokenScan_internals['tokens'], undefined> {
 		const smoosh_numerics:number[] = [];
 
@@ -1607,11 +1607,11 @@ export class TokenScan implements CanResolveMathWithDispose
 			if ('numeric' === previous.type) {
 				const previous_value = value.substring(
 					previous.from,
-					previous.to
+					previous.to,
 				);
 				const current_value = value.substring(
 					current.from,
-					current.to
+					current.to,
 				);
 
 				if (
@@ -1630,8 +1630,8 @@ export class TokenScan implements CanResolveMathWithDispose
 				new TokenSpan(
 					tokens[index - 1].from,
 					tokens[index].to,
-					'numeric'
-				)
+					'numeric',
+				),
 			);
 		}
 
@@ -1677,8 +1677,8 @@ export class TokenScan implements CanResolveMathWithDispose
 				new TokenSpan(
 					tokens[index].from,
 					tokens[index + 1].to,
-					'numeric'
-				)
+					'numeric',
+				),
 			);
 		}
 
@@ -1686,7 +1686,7 @@ export class TokenScan implements CanResolveMathWithDispose
 	}
 
 	private static parse_scan(
-		scan: TokenScan_parsing_value
+		scan: TokenScan_parsing_value,
 	): IntermediaryNumber|IntermediaryCalculation {
 		const reduced = scan.tokens.reduce(
 			(
@@ -1699,7 +1699,7 @@ export class TokenScan implements CanResolveMathWithDispose
 				is,
 				index,
 			),
-			default_tokenizer_state()
+			default_tokenizer_state(),
 		);
 
 		if (
@@ -1714,7 +1714,7 @@ export class TokenScan implements CanResolveMathWithDispose
 		throw new TokenScanParseError(
 			'Parse in unsupported state!',
 			scan,
-			reduced
+			reduced,
 		);
 	}
 
@@ -1743,7 +1743,7 @@ export class TokenScan implements CanResolveMathWithDispose
 							// eslint-disable-next-line max-len
 							'Nesting opened without left operand to push into stack!',
 							scan,
-							was
+							was,
 						);
 					}
 
@@ -1753,7 +1753,7 @@ export class TokenScan implements CanResolveMathWithDispose
 						'Nesting opened without operation to push into stack!',
 						scan,
 						was,
-						is
+						is,
 					);
 				}
 
@@ -1784,7 +1784,7 @@ export class TokenScan implements CanResolveMathWithDispose
 						'token span popping in this context not yet implemented',
 						scan,
 						was,
-						is
+						is,
 					);
 				}
 			} else if (undefined === popped) {
@@ -1799,7 +1799,7 @@ export class TokenScan implements CanResolveMathWithDispose
 						'Token scan finished with incomplete parse!',
 						scan,
 						was,
-						is
+						is,
 					);
 				}
 			} else {
@@ -1811,7 +1811,7 @@ export class TokenScan implements CanResolveMathWithDispose
 					was.left_operand = new IntermediaryCalculation(
 						popped.left_operand,
 						popped.operation,
-						was.left_operand
+						was.left_operand,
 					);
 					was.operation ='';
 					was.operand_mode = 'right';
@@ -1821,7 +1821,7 @@ export class TokenScan implements CanResolveMathWithDispose
 						'token span popping in this context not yet implemented',
 						scan,
 						was,
-						is
+						is,
 					);
 				}
 			}
@@ -1830,8 +1830,8 @@ export class TokenScan implements CanResolveMathWithDispose
 				was.left_operand = IntermediaryNumber.create(
 					value.substring(
 						is.from,
-						is.to
-					)
+						is.to,
+					),
 				);
 				was.operand_mode = 'right';
 			} else {
@@ -1840,14 +1840,14 @@ export class TokenScan implements CanResolveMathWithDispose
 						'Right operand detected without operation!',
 						scan,
 						was,
-						is
+						is,
 					);
 				} else if (undefined === was.left_operand) {
 					throw new TokenScanParseError(
 						'Right operand detected without left operand!',
 						scan,
 						was,
-						is
+						is,
 					);
 				}
 
@@ -1856,7 +1856,7 @@ export class TokenScan implements CanResolveMathWithDispose
 					was.operation,
 					IntermediaryNumber.create(value.substring(
 						is.from,
-						is.to
+						is.to,
 					)),
 				);
 
@@ -1875,7 +1875,7 @@ export class TokenScan implements CanResolveMathWithDispose
 					resolved = new IntermediaryCalculation(
 						previous.left_operand,
 						previous.operation,
-						resolved
+						resolved,
 					);
 				}
 
@@ -1889,7 +1889,7 @@ export class TokenScan implements CanResolveMathWithDispose
 					'Operation detected without left operand!',
 					scan,
 					was,
-					is
+					is,
 				);
 			} else if ('' !== was.operation) {
 				throw new TokenScanParseError(
@@ -1898,7 +1898,7 @@ export class TokenScan implements CanResolveMathWithDispose
 					}"`,
 					scan,
 					was,
-					is
+					is,
 				)
 			}
 			const maybe = value.substring(is.from, is.to);
@@ -1910,7 +1910,7 @@ export class TokenScan implements CanResolveMathWithDispose
 				'not implemented',
 				scan,
 				was,
-				is
+				is,
 			);
 		}
 

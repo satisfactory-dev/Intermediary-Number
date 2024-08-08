@@ -180,9 +180,9 @@ void describe('TokenScan', () => {
 					assert.throws(() => scan.parsed);
 					assert.strictEqual(
 						scan.valid,
-						false
+						false,
 					);
-				}
+				},
 			)
 		}
 
@@ -207,13 +207,13 @@ void describe('TokenScan', () => {
 						})).parsed throws`,
 						() => {
 							assert.throws(
-								() => scan.parsed
+								() => scan.parsed,
 							);
 							assert.strictEqual(
 								scan.valid,
-								false
+								false,
 							);
-						}
+						},
 					)
 				} else {
 					not_undefined(expected_type_info);
@@ -225,24 +225,24 @@ void describe('TokenScan', () => {
 							const result = scan.parsed;
 							assert.strictEqual(
 								scan.valid,
-								true
+								true,
 							);
 
 							assert.strictEqual(
 								result.constructor.name,
-								expected_result_type
+								expected_result_type,
 							);
 
 							assert.strictEqual(
 								result.resolve_type,
-								expected_type_info
+								expected_type_info,
 							);
 
 							assert.strictEqual(
 								result.toString(),
-								expected_result_string
+								expected_result_string,
 							);
-						}
+						},
 					)
 				}
 			}
@@ -354,7 +354,7 @@ void describe('TokenScan', () => {
 					0 === additional_args.length
 						? ''
 						: additional_args.map(
-							e => JSON.stringify(e)
+							e => JSON.stringify(e),
 						).join(', ')
 				}).toString() === ${
 					expectation
@@ -364,7 +364,7 @@ void describe('TokenScan', () => {
 					assert.strictEqual(
 						scan.valid,
 						true,
-						'input not valid!'
+						'input not valid!',
 					);
 
 					let result:unknown;
@@ -399,7 +399,7 @@ void describe('TokenScan', () => {
 								method
 							}, received ${
 								additional_args.length
-							}`
+							}`,
 						);
 
 						result = scan[method](additional_args[0]);
@@ -413,14 +413,14 @@ void describe('TokenScan', () => {
 								method
 							}, received ${
 								additional_args.length
-							}`
+							}`,
 						);
 
 						result = scan[method](
 							additional_args[
 								0
 							] as CanDoMathWithDispose_operator_types,
-							additional_args[1]
+							additional_args[1],
 						);
 					} else if (
 						'max' === method
@@ -432,7 +432,7 @@ void describe('TokenScan', () => {
 								method
 							}, received ${
 								additional_args.length
-							}`
+							}`,
 						);
 
 						const [
@@ -442,7 +442,7 @@ void describe('TokenScan', () => {
 
 						result = scan[method](
 							first as math_types,
-							...remaining
+							...remaining,
 						);
 					}
 
@@ -467,7 +467,7 @@ void describe('TokenScan', () => {
 										? 'null'
 										: (result).constructor.name
 								)
-						}`
+						}`,
 					);
 
 					assert.strictEqual(
@@ -483,9 +483,9 @@ void describe('TokenScan', () => {
 								| number
 							)
 						).toString(),
-						expectation
+						expectation,
 					);
-				}
+				},
 			)
 		}
 	})
@@ -530,7 +530,7 @@ void describe('TokenScan', () => {
 				assert.strictEqual(
 					scan.valid,
 					true,
-					'Expecting scan to be valid!'
+					'Expecting scan to be valid!',
 				);
 
 				assert.strictEqual(
@@ -544,7 +544,7 @@ void describe('TokenScan', () => {
 				);
 
 				const from_json = IntermediaryNumber.fromJson(
-					scan.toJSON()
+					scan.toJSON(),
 				);
 
 				TokenScan.require_is(from_json);
@@ -552,7 +552,7 @@ void describe('TokenScan', () => {
 				assert.strictEqual(
 					from_json.valid,
 					true,
-					'Expecting from_json to be valid!'
+					'Expecting from_json to be valid!',
 				);
 
 				assert.strictEqual(
@@ -605,14 +605,14 @@ void describe('TokenScan', () => {
 						true,
 						`Expecting TokenScan.create(${
 							JSON.stringify(input)
-						}).valid === true`
+						}).valid === true`,
 					)
 
 					const altered = scan[operation](argument);
 
 					assert.strictEqual(
 						altered.toStringCalculation(),
-						expectation
+						expectation,
 					)
 
 					if (input === expectation) {
@@ -620,10 +620,10 @@ void describe('TokenScan', () => {
 							scan,
 							altered,
 							// eslint-disable-next-line max-len
-							'If input equals expectation, scan and altered should be the same instance!'
+							'If input equals expectation, scan and altered should be the same instance!',
 						)
 					}
-				}
+				},
 			)
 		}
 	})
@@ -631,12 +631,12 @@ void describe('TokenScan', () => {
 	void describe('require_is', () => {
 		void it('behaves', () => {
 			const from_string = TokenScan.create(
-				'1+1'
+				'1+1',
 			);
 			TokenScan.require_is(from_string);
 
 			assert.doesNotThrow(
-				() => TokenScan.require_is(from_string)
+				() => TokenScan.require_is(from_string),
 			);
 
 			assert.throws(() => TokenScan.require_is(undefined));

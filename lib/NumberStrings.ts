@@ -42,7 +42,7 @@ export class NumberStrings
 	}
 
 	static is_numeric_string(
-		maybe:unknown
+		maybe:unknown,
 	) : maybe is numeric_string {
 		return (
 			this.is_amount_string(maybe)
@@ -87,7 +87,7 @@ export class NumberStrings
 						parseInt(after.substring(0, 6), 10) + 1
 					).toString().padStart(
 						Math.min(6, after.length),
-						'0'
+						'0',
 					)
 			}`.replace(/\.$/, '') as amount_string;
 		}
@@ -104,13 +104,13 @@ export class NumberStrings
 	}
 
 	private static throw_if_not_amount_string(
-		maybe:string
+		maybe:string,
 	): asserts maybe is amount_string {
 		if (
 			!this.is_amount_string(maybe)
 		) {
 			throw new NotAnAmountString(
-				'Not a supported amount string!'
+				'Not a supported amount string!',
 			);
 		}
 	}

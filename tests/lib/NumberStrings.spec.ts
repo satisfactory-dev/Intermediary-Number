@@ -43,7 +43,7 @@ void describe('NumberStrings', () => {
 				}`,
 				() => {
 					const get_result = () => NumberStrings.amount_string(
-						input
+						input,
 					);
 
 					if (true === expectation) {
@@ -52,7 +52,7 @@ void describe('NumberStrings', () => {
 					} else {
 						assert.throws(get_result, expectation);
 					}
-				}
+				},
 			)
 		}
 	})
@@ -91,11 +91,11 @@ void describe('NumberStrings', () => {
 								|| (input instanceof TokenScan)
 							)
 								? input
-								: BigNumber(input)
+								: BigNumber(input),
 						),
-						expectation
+						expectation,
 					)
-				}
+				},
 			)
 		}
 	})

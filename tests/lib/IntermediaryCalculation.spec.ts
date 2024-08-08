@@ -18,7 +18,7 @@ void describe('IntermediaryCalculation', () => {
 					'+',
 					IntermediaryNumber.One,
 				)).toStringCalculation(),
-				'1 + 1'
+				'1 + 1',
 			)
 		})
 	})
@@ -45,25 +45,25 @@ void describe('IntermediaryCalculation', () => {
 				}; foo.toString() === foo.resolve().toString()`,
 				() => {
 					const from_string = IntermediaryCalculation.fromString(
-						input
+						input,
 					);
 					IntermediaryCalculation.require_is(from_string);
 
 					assert.strictEqual(
 						from_string.toStringCalculation(),
-						expectation_calculation
+						expectation_calculation,
 					)
 
 					assert.strictEqual(
 						from_string.toString(),
-						expectation_resolve
+						expectation_resolve,
 					)
 
 					assert.strictEqual(
 						from_string.toString(),
-						from_string.resolve().toString()
+						from_string.resolve().toString(),
 					)
-				}
+				},
 			)
 		}
 	})
@@ -71,12 +71,12 @@ void describe('IntermediaryCalculation', () => {
 	void describe('require_is', () => {
 		void it('behaves', () => {
 			const from_string = IntermediaryCalculation.fromString(
-				'1+1'
+				'1+1',
 			);
 			IntermediaryCalculation.require_is(from_string);
 
 			assert.doesNotThrow(
-				() => IntermediaryCalculation.require_is(from_string)
+				() => IntermediaryCalculation.require_is(from_string),
 			);
 
 			assert.throws(() => IntermediaryCalculation.require_is(undefined));

@@ -102,11 +102,11 @@ void describe('IntermediaryNumber', () => {
 					if ('' === input) {
 						assert.strictEqual(
 							get_value(),
-							IntermediaryNumber.Zero
+							IntermediaryNumber.Zero,
 						)
 						assert.strictEqual(
 							get_value().type,
-							expectation
+							expectation,
 						)
 						return;
 					}
@@ -124,10 +124,10 @@ void describe('IntermediaryNumber', () => {
 								expectation
 							}, receieved ${
 								value.type
-							}`
+							}`,
 						);
 					}
-				}
+				},
 			)
 		}
 	})
@@ -144,7 +144,7 @@ void describe('IntermediaryNumber', () => {
 				] => [
 					e[0],
 					'' === e[0] ? undefined : e[1],
-				]
+				],
 			),
 			[
 				'4 / 3',
@@ -166,7 +166,7 @@ void describe('IntermediaryNumber', () => {
 				}`,
 				() => {
 					const maybe = IntermediaryNumber.create_if_valid(
-						input.toString()
+						input.toString(),
 					);
 
 					let failure:string|undefined = undefined;
@@ -180,7 +180,7 @@ void describe('IntermediaryNumber', () => {
 					assert.strictEqual(
 						maybe instanceof NotValid,
 						(undefined === expectation),
-						failure
+						failure,
 					);
 
 					if (undefined !== expectation) {
@@ -200,10 +200,10 @@ void describe('IntermediaryNumber', () => {
 								expectation
 							}, receieved ${
 								typecast.type
-							}`
+							}`,
 						);
 					}
-				}
+				},
 			)
 		}
 	})
@@ -213,23 +213,23 @@ void describe('IntermediaryNumber', () => {
 			assert.strictEqual(
 				IntermediaryNumber.One.do_math_then_dispose(
 					'divide',
-					1
+					1,
 				),
-				IntermediaryNumber.One
+				IntermediaryNumber.One,
 			);
 			assert.strictEqual(
 				IntermediaryNumber.Zero.do_math_then_dispose(
 					'times',
-					1
+					1,
 				),
-				IntermediaryNumber.Zero
+				IntermediaryNumber.Zero,
 			);
 			assert.strictEqual(
 				IntermediaryNumber.One.do_math_then_dispose(
 					'plus',
-					1
+					1,
 				).compare(2),
-				0
+				0,
 			);
 		})
 	})
@@ -260,9 +260,9 @@ void describe('IntermediaryNumber', () => {
 				() => {
 					assert.strictEqual(
 						left.isGreaterThan(right),
-						expectation
+						expectation,
 					)
-				}
+				},
 			)
 		}
 	})
@@ -271,11 +271,11 @@ void describe('IntermediaryNumber', () => {
 		void it('behaves', () => {
 			assert.strictEqual(
 				IntermediaryNumber.create('0.333333').toAmountString(),
-				'0.333333'
+				'0.333333',
 			)
 			assert.strictEqual(
 				IntermediaryNumber.create(new Fraction(1/3)).toAmountString(),
-				'0.333334'
+				'0.333334',
 			)
 		})
 	})
@@ -330,7 +330,7 @@ void describe('IntermediaryNumber', () => {
 
 					assert.strictEqual(value.type, expected_type);
 					assert.strictEqual(value.toString(), expected_string);
-				}
+				},
 			)
 		}
 	})
@@ -340,21 +340,21 @@ void describe('IntermediaryCalculation', () => {
 	void it ('does a better job of handling things than native', () => {
 		assert.notStrictEqual(
 			(0.8 - 0.1).toFixed(16),
-			'0.7'
+			'0.7',
 		);
 		assert.strictEqual(
 			IntermediaryNumber.create(0.8).minus(0.1).toString(),
-			'0.7'
+			'0.7',
 		);
 		assert.notStrictEqual(
 			BigNumber(
-				NumberStrings.amount_string('0.333333')
+				NumberStrings.amount_string('0.333333'),
 			).times(3).toString(),
-			'1'
+			'1',
 		),
 		assert.strictEqual(
 			IntermediaryNumber.create('0.3r').times(3).toString(),
-			'1'
+			'1',
 		);
 	});
 
@@ -369,7 +369,7 @@ void describe('IntermediaryCalculation', () => {
 
 			assert.notStrictEqual(
 				two,
-				divided
+				divided,
 			);
 		})
 	})
@@ -382,7 +382,7 @@ void describe('IntermediaryCalculation', () => {
 					'+',
 					IntermediaryNumber.One,
 				)).isGreaterThan(2),
-				false
+				false,
 			)
 			assert.strictEqual(
 				(new IntermediaryCalculation(
@@ -390,7 +390,7 @@ void describe('IntermediaryCalculation', () => {
 					'+',
 					IntermediaryNumber.One,
 				)).isGreaterThan(1),
-				true
+				true,
 			)
 		})
 	})
@@ -403,7 +403,7 @@ void describe('IntermediaryCalculation', () => {
 					'+',
 					IntermediaryNumber.One,
 				)).max(3, 4, 5).toString(),
-				'5'
+				'5',
 			)
 		})
 	})
@@ -416,7 +416,7 @@ void describe('IntermediaryCalculation', () => {
 					'+',
 					IntermediaryNumber.One,
 				)).min(3, 4, 5).toString(),
-				'2'
+				'2',
 			)
 		})
 	})
@@ -431,7 +431,7 @@ void describe('IntermediaryCalculation', () => {
 
 			assert.strictEqual(
 				two.plus(IntermediaryNumber.Zero).toString(),
-				'2'
+				'2',
 			)
 
 			assert.strictEqual(
@@ -440,7 +440,7 @@ void describe('IntermediaryCalculation', () => {
 					'-',
 					IntermediaryNumber.One,
 				)).plus(two),
-				two
+				two,
 			)
 		})
 	})
@@ -450,17 +450,17 @@ void describe('IntermediaryCalculation', () => {
 			const third = (new IntermediaryCalculation(
 				IntermediaryNumber.One,
 				'/',
-				IntermediaryNumber.create(3)
+				IntermediaryNumber.create(3),
 			));
 
 			assert.strictEqual(
 				third.toAmountString(),
-				'0.333334'
+				'0.333334',
 			)
 
 			assert.strictEqual(
 				third.toAmountString(),
-				'0.333334'
+				'0.333334',
 			)
 		})
 	})
@@ -470,17 +470,17 @@ void describe('IntermediaryCalculation', () => {
 			const third = (new IntermediaryCalculation(
 				IntermediaryNumber.One,
 				'/',
-				IntermediaryNumber.create(3)
+				IntermediaryNumber.create(3),
 			));
 
 			assert.strictEqual(
 				third.toFraction().toString(),
-				'0.(3)'
+				'0.(3)',
 			)
 
 			assert.strictEqual(
 				third.toFraction().toString(),
-				'0.(3)'
+				'0.(3)',
 			)
 		})
 	})
@@ -490,12 +490,12 @@ void describe('IntermediaryCalculation', () => {
 			const adjusted_zero = new IntermediaryCalculation(
 				IntermediaryNumber.One,
 				'-',
-				IntermediaryNumber.Zero
+				IntermediaryNumber.Zero,
 			);
 
 			assert.deepStrictEqual(
 				adjusted_zero.toJSON(),
-				IntermediaryNumber.One.toJSON()
+				IntermediaryNumber.One.toJSON(),
 			)
 		})
 	})
@@ -597,11 +597,11 @@ void describe('do_math', () => {
 		] = data_set;
 
 		const left_operand = IntermediaryCalculation.fromString(
-			left_operand_input
+			left_operand_input,
 		);
 
 		const right_operand = IntermediaryCalculation.fromString(
-			right_operand_input
+			right_operand_input,
 		);
 
 		void it(
@@ -619,7 +619,7 @@ void describe('do_math', () => {
 					left_operand[operator_method](right_operand).toString(),
 					expectation,
 				);
-			}
+			},
 		)
 	}
 });
@@ -671,7 +671,7 @@ void describe('abs', () => {
 				(
 					value as unknown as operand_types
 				).abs().toString(),
-				expectation
+				expectation,
 			);
 		})
 	}
@@ -679,7 +679,7 @@ void describe('abs', () => {
 	void it('returns IntermediaryNumber.Zero', () => {
 		assert.strictEqual(
 			IntermediaryNumber.Zero.abs(),
-			IntermediaryNumber.Zero
+			IntermediaryNumber.Zero,
 		)
 	})
 })
@@ -717,18 +717,18 @@ void describe('max', () => {
 			() => {
 				const index = Math.min(
 					max_args.length - 1,
-					Math.floor(Math.random() * max_args.length)
+					Math.floor(Math.random() * max_args.length),
 				);
 
 				const initial_arg = IntermediaryNumber.reuse_or_create(
-					max_args[index]
+					max_args[index],
 				);
 
 				assert.strictEqual(
 					initial_arg.max(...max_args).toString(),
-					expectation
+					expectation,
 				);
-			}
+			},
 		)
 
 		void it(
@@ -740,20 +740,20 @@ void describe('max', () => {
 			() => {
 				const index = Math.min(
 					max_args.length - 1,
-					Math.floor(Math.random() * max_args.length)
+					Math.floor(Math.random() * max_args.length),
 				);
 
 				const initial_arg = IntermediaryCalculation.fromString(
 					IntermediaryNumber.reuse_or_create(
-						max_args[index]
-					).toString()
+						max_args[index],
+					).toString(),
 				);
 
 				assert.strictEqual(
 					initial_arg.max(...max_args).toString(),
-					expectation
+					expectation,
 				);
-			}
+			},
 		)
 	}
 })
@@ -915,7 +915,7 @@ void describe('CanConvertType', () => {
 			() => (new IntermediaryCalculation(
 				IntermediaryNumber.One,
 				'+',
-				IntermediaryCalculation.fromString('1/3')
+				IntermediaryCalculation.fromString('1/3'),
 			)),
 			{
 				type: 'IntermediaryCalculation',
@@ -974,7 +974,7 @@ void describe('CanConvertType', () => {
 
 				assert.deepStrictEqual(
 					value.toJSON(),
-					expectation
+					expectation,
 				);
 
 				if (resolve_expectation) {
@@ -985,7 +985,7 @@ void describe('CanConvertType', () => {
 						resolve_expectation,
 					);
 				}
-			}
+			},
 		)
 	}
 })

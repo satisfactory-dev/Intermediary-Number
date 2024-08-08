@@ -21,7 +21,7 @@ lint--eslint:
 		--cache-location ./.eslintcache \
 		--cache-strategy content \
 		--cache \
-		'./*.ts' lib tests
+		'./**/*.ts'
 
 lint: lint--prettier lint--tsc lint--eslint
 
@@ -29,7 +29,7 @@ lint-fix:
 	@echo 'fixing prettier issues'
 	@./node_modules/.bin/prettier . --write
 	@echo 'fixing eslint issues'
-	@./node_modules/.bin/eslint --cache './*.ts' lib tests --fix
+	@./node_modules/.bin/eslint --cache './**/*.ts' --fix
 
 .PHONY: tests
 tests: build
