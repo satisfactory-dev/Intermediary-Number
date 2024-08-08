@@ -408,6 +408,19 @@ void describe('IntermediaryCalculation', () => {
 		})
 	})
 
+	void describe('min', () => {
+		void it('beahaves', () => {
+			assert.strictEqual(
+				(new IntermediaryCalculation(
+					IntermediaryNumber.One,
+					'+',
+					IntermediaryNumber.One,
+				)).min(3, 4, 5).toString(),
+				'2'
+			)
+		})
+	})
+
 	void describe('plus', () => {
 		void it('behaves', () => {
 			const two = new IntermediaryCalculation(

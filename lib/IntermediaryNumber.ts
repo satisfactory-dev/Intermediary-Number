@@ -165,6 +165,11 @@ interface CanDoMath<
 		first: math_types,
 		...remaining: math_types[]
 	): math_types;
+
+	min(
+		first: math_types,
+		...remaining: math_types[]
+	): math_types;
 }
 
 interface CanResolveMath<
@@ -363,6 +368,23 @@ function max(
 	return IntermediaryNumber.reuse_or_create(max);
 }
 
+function min(
+	first: math_types,
+	second: math_types,
+	...remaining: math_types[]
+): math_types {
+	let min = IntermediaryNumber.reuse_or_create(first);
+
+	for (const entry of [second, ...remaining]) {
+		const maybe = IntermediaryNumber.reuse_or_create(entry);
+		if (-1 === maybe.compare(min)) {
+			min = maybe;
+		}
+	}
+
+	return IntermediaryNumber.reuse_or_create(min);
+}
+
 //#region TokenScan utility functions
 
 function default_tokenizer_state(): TokenScan_tokenizer {
@@ -493,6 +515,13 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 		...remaining: math_types[]
 	): math_types {
 		return max(this, first, ...remaining);
+	}
+
+	min(
+		first: math_types,
+		...remaining: math_types[]
+	): math_types {
+		return min(this, first, ...remaining);
 	}
 
 	minus(value:math_types)
@@ -878,6 +907,13 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 		...remaining: math_types[]
 	): math_types {
 		return max(this, first, ...remaining);
+	}
+
+	min(
+		first: math_types,
+		...remaining: math_types[]
+	): math_types {
+		return min(this, first, ...remaining);
 	}
 
 	minus(value:math_types)
@@ -1302,6 +1338,10 @@ export class TokenScan implements CanResolveMathWithDispose
 
 	max(first: math_types, ...remaining: math_types[]): math_types {
 		return this.parsed.max(first, ...remaining);
+	}
+
+	min(first: math_types, ...remaining: math_types[]): math_types {
+		return this.parsed.min(first, ...remaining);
 	}
 
 	minus(value: math_types): TokenScan {
