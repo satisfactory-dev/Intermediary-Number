@@ -1175,8 +1175,6 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 
 //#region TokenScan
 
-
-
 class TokenSpan<T = TokenSpan_types>
 {
 	readonly from:number;
