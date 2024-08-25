@@ -11,6 +11,7 @@
 	"exports": "./index.js",
 	"types": "./index.d.ts",
 	"devDependencies": {
+		"@satisfactory-dev/custom-assert": "^0.2.3",
 		"@signpostmarv/eslint-config": "^0.1.0",
 		"@types/eslint": "^8.56.10",
 		"@types/node": "^20.14.2",
@@ -23,7 +24,6 @@
 		"typescript-eslint": "^7.13.0"
 	},
 	"dependencies": {
-		"@satisfactory-dev/custom-assert": "^0.2.2",
 		"bignumber.js": "^9.1.2",
 		"fraction.js": "^4.3.7"
 	}
