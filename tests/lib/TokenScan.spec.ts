@@ -487,7 +487,6 @@ void describe('TokenScan', () => {
 							|| 'number' === typeof result
 						),
 						true,
-						// eslint-disable-next-line max-len
 						`Expecting either a boolean, string, number, or an appropriate class instance, received ${
 							undefined === result
 								? 'undefined'

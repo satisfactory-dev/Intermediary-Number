@@ -352,7 +352,7 @@ void describe('IntermediaryCalculation', () => {
 				NumberStrings.amount_string('0.333333'),
 			).times(3).toString(),
 			'1',
-		),
+		);
 		assert.strictEqual(
 			IntermediaryNumber.create('0.3r').times(3).toString(),
 			'1',

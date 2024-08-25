@@ -1235,11 +1235,7 @@ export class TokenScan implements CanResolveMathWithDispose
 
 	get parsed(): Exclude<TokenScan_internals['parsed'], undefined>
 	{
-		if (undefined === this.internal.parsed) {
-			this.internal.parsed = TokenScan.parse_scan(this);
-		}
-
-		return this.internal.parsed;
+		return this.#parse();
 	}
 
 	get resolve_type(): string {
@@ -1263,14 +1259,23 @@ export class TokenScan implements CanResolveMathWithDispose
 	{
 		if (undefined === this.internal.valid) {
 			try {
-				this.parsed;
+				this.#parse();
 				this.internal.valid = true;
-			} catch (err) {
+			} catch {
 				this.internal.valid = false;
 			}
 		}
 
 		return this.internal.valid;
+	}
+
+	#parse(): Exclude<TokenScan_internals['parsed'], undefined>
+	{
+		if (undefined === this.internal.parsed) {
+			this.internal.parsed = TokenScan.parse_scan(this);
+		}
+
+		return this.internal.parsed;
 	}
 
 	abs() {
