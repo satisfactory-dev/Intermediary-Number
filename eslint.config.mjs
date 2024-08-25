@@ -12,9 +12,7 @@ export default [
 	},
 	...config,
 	{
-		ignores: [
-			'**/*.js',
-			'**/*.d.ts',
-		]
+		files: ['**/*.ts'],
+		ignores: ['**/*.d.ts', '**/*.js', '**/*.mjs'],
 	}
 ];

@@ -16,12 +16,11 @@ lint--prettier:
 	@./node_modules/.bin/prettier . --check
 
 lint--eslint:
+	@NODE_OPTIONS='' ./node_modules/.bin/tsc --project ./tsconfig.eslint.json
+	@echo 'checking eslint for all issues with config'
+	@./node_modules/.bin/eslint --config eslint.config.js.mjs --cache './**/*.mjs'
 	@echo 'checking eslint for all issues'
-	@./node_modules/.bin/eslint  \
-		--cache-location ./.eslintcache \
-		--cache-strategy content \
-		--cache \
-		'./**/*.ts'
+	@./node_modules/.bin/eslint --cache './**/*.ts'
 
 lint: lint--prettier lint--tsc lint--eslint
 
