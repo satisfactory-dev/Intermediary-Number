@@ -1010,6 +1010,14 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 			|| left instanceof Fraction
 			|| right instanceof Fraction
 		) {
+			if (left_operand instanceof IntermediaryNumberInfinity) {
+				return left_operand;
+			} else if (
+				right_operand instanceof IntermediaryNumberInfinity
+			) {
+				return right_operand;
+			}
+
 			return IntermediaryNumber.create(
 				Fraction_operation_map[this.operation](
 					(

@@ -7,7 +7,9 @@ import assert from 'node:assert/strict';
 import {
 	IntermediaryCalculation,
 	IntermediaryNumber,
+	IntermediaryNumberInfinity,
 } from '../../index';
+import Fraction from 'fraction.js';
 
 void describe('IntermediaryCalculation', () => {
 	void describe('toStringCalculation', () => {
@@ -82,4 +84,23 @@ void describe('IntermediaryCalculation', () => {
 			assert.throws(() => IntermediaryCalculation.require_is(undefined));
 		})
 	})
+
+	void describe('resolve', () => {
+		void it('behaves', () => {
+			const turbofuel_in_v1 = new IntermediaryCalculation(
+				IntermediaryNumber.reuse_or_create(new Fraction('4.8')),
+				'*',
+				IntermediaryNumberInfinity.One,
+			);
+
+			assert.strictEqual(
+				turbofuel_in_v1.has_infinity,
+				true,
+			);
+			assert.strictEqual(
+				turbofuel_in_v1.resolve(),
+				IntermediaryNumberInfinity.One,
+			);
+		});
+	});
 })
