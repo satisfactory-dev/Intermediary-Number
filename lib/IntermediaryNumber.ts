@@ -262,6 +262,17 @@ function compare(
 	value: math_types,
 	to: CanConvertType,
 ): 0|1|-1 {
+	if (
+		value instanceof IntermediaryNumberInfinity
+		&& to instanceof IntermediaryNumberInfinity
+	) {
+		return 0;
+	} else if (value instanceof IntermediaryNumberInfinity) {
+		return 1;
+	} else if (to instanceof IntermediaryNumberInfinity) {
+		return -1;
+	}
+
 	const comparable = IntermediaryNumber.reuse_or_create(
 		value,
 	).toBigNumberOrFraction();
