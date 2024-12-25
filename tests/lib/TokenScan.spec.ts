@@ -155,6 +155,42 @@ const from_string_data_sets:from_string_data_set[] = [
 		'amount_string + IntermediaryCalculation',
 		'3',
 	]),
+	...expand_ignore_characters([
+		'Infinity',
+		'IntermediaryNumberInfinity',
+		'BigNumber',
+		'Infinity',
+	]),
+	...expand_ignore_characters([
+		'Infinity + 1 - Infinity',
+		'IntermediaryCalculation',
+		'IntermediaryCalculation - BigNumber',
+		'1',
+	]),
+	...expand_ignore_characters([
+		'Infinity - 1 + Infinity',
+		'IntermediaryCalculation',
+		'IntermediaryCalculation + BigNumber',
+		'1',
+	]),
+	...expand_ignore_characters([
+		'(1 * Infinity) / Infinity',
+		'IntermediaryCalculation',
+		'IntermediaryCalculation / BigNumber',
+		'1',
+	]),
+	...expand_ignore_characters([
+		'2 * (Infinity / Infinity)',
+		'IntermediaryCalculation',
+		'amount_string * IntermediaryCalculation',
+		'2',
+	]),
+	...expand_ignore_characters([
+		'Infinity / Infinity',
+		'IntermediaryCalculation',
+		'BigNumber / BigNumber',
+		'1',
+	]),
 ];
 
 const from_string_data_sets_throwing:[

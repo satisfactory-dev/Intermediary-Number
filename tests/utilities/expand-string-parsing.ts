@@ -23,6 +23,7 @@ export type from_string_data_set = [
 	string,
 	(
 		| 'IntermediaryNumber'
+		| 'IntermediaryNumberInfinity'
 		| 'IntermediaryCalculation'
 		| undefined
 	),
@@ -32,6 +33,7 @@ export type from_string_data_set = [
 	string,
 	(
 		| 'IntermediaryNumber'
+		| 'IntermediaryNumberInfinity'
 		| 'IntermediaryCalculation'
 	),
 	string,

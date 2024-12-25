@@ -77,6 +77,7 @@ type TokenSpan_types =
 	| 'nesting_close'
 	| 'numeric'
 	| 'operation'
+	| 'Infinity'
 
 type TokenSpan_types_part_baked = Exclude<
 	TokenSpan_types,
@@ -415,6 +416,12 @@ function is_numeric(
 	return 'numeric' === maybe.type;
 }
 
+function is_infinity(
+	maybe: TokenSpan<TokenSpan_types>,
+): maybe is TokenSpan<'Infinity'> {
+	return 'Infinity' === maybe.type;
+}
+
 export function is_operation_value(
 	maybe: string,
 ): asserts maybe is operation_types {
@@ -697,6 +704,8 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 			}
 
 			return new this(new Fraction(input));
+		} else if ('Infinity' === input) {
+			return new IntermediaryNumberInfinity(new BigNumber('Infinity'));
 		}
 
 		throw new Error('Unsupported argument specified!');
@@ -772,6 +781,38 @@ export class IntermediaryNumber implements CanDoMathWithDispose
 
 //#endregion
 
+//#region IntermediaryNumberInfinity
+
+export class IntermediaryNumberInfinity extends IntermediaryNumber
+{
+	static readonly One = new this(new BigNumber('Infinity'));
+
+	static readonly Zero = new this(new BigNumber('Infinity'));
+
+	isOne(): boolean {
+		return false;
+	}
+
+	isZero(): boolean {
+		return false;
+	}
+
+	toFraction(): Fraction
+	{
+		throw new Error('Cannot convert infinity to Fraction');
+	}
+
+	toString(): string {
+		return 'Infinity';
+	}
+
+	toStringCalculation(): string {
+		return 'Infinity';
+	}
+}
+
+//#endregion
+
 //#region IntermediaryCalculation
 
 export class NotValid extends Error
@@ -830,6 +871,14 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 		this.left_operand = left;
 		this.operation = operation;
 		this.right_operand = right;
+	}
+
+	get has_infinity(): boolean
+	{
+		return (
+			this.left_operand instanceof IntermediaryNumberInfinity
+			|| this.right_operand instanceof IntermediaryNumberInfinity
+		);
 	}
 
 	get left_type(): operand_type_property_types
@@ -937,6 +986,16 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 
 	resolve(): IntermediaryNumber
 	{
+		const reduced = IntermediaryCalculation.maybe_short_circuit(
+			this.left_operand,
+			this.operation,
+			this.right_operand,
+		);
+
+		if (reduced instanceof IntermediaryNumber) {
+			return reduced;
+		}
+
 		const left_operand = this.operand_to_IntermediaryNumber(
 			this.left_operand,
 		);
@@ -1024,11 +1083,21 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 	}
 
 	toJSON(): CanConvertTypeJson {
-		const left = this.operand_to_IntermediaryNumber(
+		const left = (
+			this.left_operand instanceof IntermediaryCalculation
+			&& this.left_operand.has_infinity
+		)
+			? this.left_operand
+			: this.operand_to_IntermediaryNumber(
 			this.left_operand,
 		);
 
-		const right = this.operand_to_IntermediaryNumber(
+		const right = (
+			this.right_operand instanceof IntermediaryCalculation
+			&& this.right_operand.has_infinity
+		)
+			? this.right_operand
+			: this.operand_to_IntermediaryNumber(
 			this.right_operand,
 		);
 
@@ -1146,8 +1215,93 @@ export class IntermediaryCalculation implements CanResolveMathWithDispose
 		left:operand_types,
 		operation:operation_types,
 		right:operand_types,
-	) {
+	): operand_types|undefined {
 		let value:operand_types|undefined = undefined;
+
+		if (
+			left instanceof IntermediaryNumberInfinity
+			&& right instanceof IntermediaryNumberInfinity
+		) {
+			if (
+				'+' === operation
+				|| '*' === operation
+			) {
+				// infinity plus or multiplied by infintiy is infinity
+				return left;
+			} else if (
+				'-' === operation
+			) {
+				return IntermediaryNumber.Zero;
+			} else if (
+				'/' === operation
+			) {
+				return IntermediaryNumber.One;
+			}
+		}
+
+		if (
+			left instanceof IntermediaryCalculation
+			&& left.has_infinity
+			&& (
+				(
+					'+' === left.operation
+					&& '-' === operation
+				)
+				|| (
+					'-' === left.operation
+					&& '+' === operation
+				)
+			)
+			&& (
+				right instanceof IntermediaryNumberInfinity
+			)
+			&& (
+				!(left.left_operand instanceof IntermediaryNumberInfinity)
+				|| !(left.right_operand instanceof IntermediaryNumberInfinity)
+			)
+		) {
+			return (
+				left.left_operand instanceof IntermediaryNumberInfinity
+					? left.right_operand
+					: left.left_operand
+			);
+		} else if (
+			right instanceof IntermediaryCalculation
+			&& right.has_infinity
+			&& (
+				(
+					'+' === right.operation
+					&& '-' === operation
+				)
+				|| (
+					'-' === right.operation
+					&& '+' === operation
+				)
+			)
+			&& (
+				left instanceof IntermediaryNumberInfinity
+			)
+			&& (
+				!(right.left_operand instanceof IntermediaryNumberInfinity)
+				|| !(right.right_operand instanceof IntermediaryNumberInfinity)
+			)
+		) {
+			return (
+				right.left_operand instanceof IntermediaryNumberInfinity
+					? right.right_operand
+					: right.left_operand
+			);
+		} else if (
+			'/' === operation
+			&& ! right.isOne()
+			&& left instanceof IntermediaryCalculation
+			&& left.has_infinity
+			&& !(left.left_operand instanceof IntermediaryNumberInfinity)
+			&& '*x'.includes(left.operation)
+			&& right instanceof IntermediaryNumberInfinity
+		) {
+			return left.left_operand;
+		}
 
 		if ('+' === operation) {
 			if (left.isZero()) {
@@ -1517,6 +1671,14 @@ export class TokenScan implements CanResolveMathWithDispose
 			));
 		}
 
+		for (const entry of value.matchAll(/(\bInfinity\b)/g)) {
+			tokens.push(new TokenSpan(
+				entry.index,
+				entry.index + entry[0].length,
+				'Infinity',
+			));
+		}
+
 		tokens = tokens.sort((a, b) => {
 			return a.from - b.from;
 		})
@@ -1828,7 +1990,7 @@ export class TokenScan implements CanResolveMathWithDispose
 					);
 				}
 			}
-		} else if (is_numeric(is)) {
+		} else if (is_numeric(is) || is_infinity(is)) {
 			if ('left' === was.operand_mode) {
 				was.left_operand = IntermediaryNumber.create(
 					value.substring(
