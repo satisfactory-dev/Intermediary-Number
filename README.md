@@ -9,8 +9,8 @@ Intermediary Number classes & utilities for the [Production Calculator](https://
 
 ### Requirements
 
--   Docker
-    -   vscode recommended to use devcontainer support
+- Docker
+    - vscode recommended to use devcontainer support
 
 ### Setup
 
@@ -27,5 +27,5 @@ Please refer to the tests in the meantime.
 
 ## Issues
 
--   Issue tracker for all the related projects except Docs.json.ts are [available on GitHub](https://github.com/orgs/satisfactory-dev/projects/1).
--   [Issues with Docs.json.ts currently need to be viewed separately](https://github.com/satisfactory-dev/Docs.json.ts/issues).
+- Issue tracker for all the related projects except Docs.json.ts are [available on GitHub](https://github.com/orgs/satisfactory-dev/projects/1).
+- [Issues with Docs.json.ts currently need to be viewed separately](https://github.com/satisfactory-dev/Docs.json.ts/issues).
