@@ -4,9 +4,10 @@ import {
 import {
 	run,
 } from 'node:test';
+
 import {
 	glob,
-} from 'glob';
+} from 'fs/promises';
 
 const __dirname = import.meta.dirname;
 
@@ -14,8 +15,14 @@ const ac = new AbortController();
 
 let already_stopped = false;
 
+const files: string[] = [];
+
+for await(const filepath of glob(`${__dirname}/tests/**/*.spec.ts`)) {
+	files.push(filepath);
+}
+
 run({
-	files: await glob(`${__dirname}/tests/**/*.spec.ts`),
+	files,
 	concurrency: true,
 	signal: ac.signal,
 })

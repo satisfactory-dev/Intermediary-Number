@@ -9,82 +9,85 @@ import {
 	not_undefined,
 } from '@satisfactory-dev/custom-assert';
 
-import {
+import type {
 	CanConvertType,
 	CanConvertTypeJson,
 	input_types,
+	math_types,
+	operand_types,
+	type_property_types,
+} from '../../index.ts';
+import {
 	IntermediaryCalculation,
 	IntermediaryNumber,
-	math_types,
 	NotValid,
 	NumberStrings,
-	operand_types,
 	TokenScan,
-	type_property_types,
-} from '../../index';
+} from '../../index.ts';
 
 void describe('IntermediaryNumber', () => {
-	const create_data_sets:[
-			input_types,
-			type_property_types|undefined,
-		][] = [
-			[
-				'',
-				'amount_string',
-			],
-			[
-				'1',
-				'amount_string',
-			],
-			[
-				'lolnope',
-				undefined,
-			],
-			[
-				new Fraction(1/3),
-				'Fraction',
-			],
-			[
-				new BigNumber('999999999999999999999999999999999'),
-				'BigNumber',
-			],
-			[
-				'0.13r',
-				'Fraction',
-			],
-			[
-				'0.1(3)',
-				'Fraction',
-			],
-			[
-				'0.1(23)',
-				'Fraction',
-			],
-			[
-				'0.1[3]',
-				'Fraction',
-			],
-			[
-				'0.1[23]',
-				'Fraction',
-			],
-			[
-				'0.1(3)r',
-				'Fraction',
-			],
-			[
-				'0.1(23)r',
-				'Fraction',
-			],
-			[
-				'0.1[3]r',
-				'Fraction',
-			],
-			[
-				'0.1[23]r',
-				'Fraction',
-			],
-		];
+	const create_data_sets: [
+		input_types,
+		type_property_types|undefined,
+	][] = [
+		[
+			'',
+			'amount_string',
+		],
+		[
+			'1',
+			'amount_string',
+		],
+		[
+			'lolnope',
+			undefined,
+		],
+		[
+			new Fraction(1 / 3),
+			'Fraction',
+		],
+		[
+			new BigNumber('999999999999999999999999999999999'),
+			'BigNumber',
+		],
+		[
+			'0.13r',
+			'Fraction',
+		],
+		[
+			'0.1(3)',
+			'Fraction',
+		],
+		[
+			'0.1(23)',
+			'Fraction',
+		],
+		[
+			'0.1[3]',
+			'Fraction',
+		],
+		[
+			'0.1[23]',
+			'Fraction',
+		],
+		[
+			'0.1(3)r',
+			'Fraction',
+		],
+		[
+			'0.1(23)r',
+			'Fraction',
+		],
+		[
+			'0.1[3]r',
+			'Fraction',
+		],
+		[
+			'0.1[23]r',
+			'Fraction',
+		],
+	];
+
 	void describe('create', () => {
 		for (const data_set of create_data_sets) {
 			const [input, expectation] = data_set;
@@ -104,11 +107,12 @@ void describe('IntermediaryNumber', () => {
 						assert.strictEqual(
 							get_value(),
 							IntermediaryNumber.Zero,
-						)
+						);
 						assert.strictEqual(
 							get_value().type,
 							expectation,
-						)
+						);
+
 						return;
 					}
 
@@ -129,12 +133,12 @@ void describe('IntermediaryNumber', () => {
 						);
 					}
 				},
-			)
+			);
 		}
-	})
+	});
 
 	void describe('create_if_valid', () => {
-		const data_sets:[
+		const data_sets: [
 			input_types,
 			'IntermediaryCalculation'|type_property_types|undefined,
 		][] = [
@@ -170,9 +174,10 @@ void describe('IntermediaryNumber', () => {
 						input.toString(),
 					);
 
-					let failure:string|undefined = undefined;
+					let failure: string|undefined = undefined;
 
 					if (!(maybe instanceof NotValid)) {
+						// eslint-disable-next-line @stylistic/max-len
 						failure = `Expecting an instance of NotValid, receieved ${
 							JSON.stringify(maybe.toJSON())
 						}`;
@@ -205,9 +210,9 @@ void describe('IntermediaryNumber', () => {
 						);
 					}
 				},
-			)
+			);
 		}
-	})
+	});
 
 	void describe('do_math_then_dispose', () => {
 		void it('behaves', () => {
@@ -232,11 +237,11 @@ void describe('IntermediaryNumber', () => {
 				).compare(2),
 				0,
 			);
-		})
-	})
+		});
+	});
 
 	void describe('isGreaterThan', () => {
-		const data_sets:[operand_types|input_types, math_types, boolean][] = [
+		const data_sets: [operand_types|input_types, math_types, boolean][] = [
 			[IntermediaryNumber.One, IntermediaryNumber.Zero, true],
 			[IntermediaryNumber.One, IntermediaryNumber.One, false],
 			[IntermediaryNumber.Zero, IntermediaryNumber.One, false],
@@ -262,27 +267,29 @@ void describe('IntermediaryNumber', () => {
 					assert.strictEqual(
 						left.isGreaterThan(right),
 						expectation,
-					)
+					);
 				},
-			)
+			);
 		}
-	})
+	});
 
 	void describe('toAmountString', () => {
 		void it('behaves', () => {
 			assert.strictEqual(
 				IntermediaryNumber.create('0.333333').toAmountString(),
 				'0.333333',
-			)
+			);
 			assert.strictEqual(
-				IntermediaryNumber.create(new Fraction(1/3)).toAmountString(),
+				IntermediaryNumber.create(
+					new Fraction(1 / 3),
+				).toAmountString(),
 				'0.333334',
-			)
-		})
-	})
+			);
+		});
+	});
 
 	void describe('fromJson', () => {
-		const data_sets:[
+		const data_sets: [
 			CanConvertTypeJson,
 			'IntermediaryCalculation'|type_property_types,
 			string,
@@ -332,13 +339,13 @@ void describe('IntermediaryNumber', () => {
 					assert.strictEqual(value.type, expected_type);
 					assert.strictEqual(value.toString(), expected_string);
 				},
-			)
+			);
 		}
-	})
+	});
 });
 
 void describe('IntermediaryCalculation', () => {
-	void it ('does a better job of handling things than native', () => {
+	void it('does a better job of handling things than native', () => {
 		assert.notStrictEqual(
 			(0.8 - 0.1).toFixed(16),
 			'0.7',
@@ -372,8 +379,8 @@ void describe('IntermediaryCalculation', () => {
 				two,
 				divided,
 			);
-		})
-	})
+		});
+	});
 
 	void describe('isGreaterThan', () => {
 		void it('behaves', () => {
@@ -384,7 +391,7 @@ void describe('IntermediaryCalculation', () => {
 					IntermediaryNumber.One,
 				)).isGreaterThan(2),
 				false,
-			)
+			);
 			assert.strictEqual(
 				(new IntermediaryCalculation(
 					IntermediaryNumber.One,
@@ -392,12 +399,12 @@ void describe('IntermediaryCalculation', () => {
 					IntermediaryNumber.One,
 				)).isGreaterThan(1),
 				true,
-			)
-		})
-	})
+			);
+		});
+	});
 
 	void describe('max', () => {
-		const data_sets:[
+		const data_sets: [
 			[
 				IntermediaryNumber,
 				IntermediaryCalculation,
@@ -445,23 +452,33 @@ void describe('IntermediaryCalculation', () => {
 				expectation,
 			] = data_sets[index];
 
-			void it(`IntermediaryNumber.max() behaves with dataset ${index}`, () => {
-				assert.strictEqual(
-					number_implementation.max(
-						...additional_args,
-					).toString(),
-					expectation,
-				);
-			});
+			void it(
+				`IntermediaryNumber.max() behaves with dataset ${
+					index
+				}`,
+				() => {
+					assert.strictEqual(
+						number_implementation.max(
+							...additional_args,
+						).toString(),
+						expectation,
+					);
+				},
+			);
 
-			void it(`IntermediaryCalculation.max() behaves with dataset ${index}`, () => {
-				assert.strictEqual(
-					calculation_implementation.max(
-						...additional_args,
-					).toString(),
-					expectation,
-				);
-			});
+			void it(
+				`IntermediaryCalculation.max() behaves with dataset ${
+					index
+				}`,
+				() => {
+					assert.strictEqual(
+						calculation_implementation.max(
+							...additional_args,
+						).toString(),
+						expectation,
+					);
+				},
+			);
 
 			void it(`TokenScan.max() behaves with dataset ${index}`, () => {
 				assert.strictEqual(
@@ -472,10 +489,10 @@ void describe('IntermediaryCalculation', () => {
 				);
 			});
 		}
-	})
+	});
 
 	void describe('min', () => {
-		const data_sets:[
+		const data_sets: [
 			[
 				IntermediaryNumber,
 				IntermediaryCalculation,
@@ -523,23 +540,33 @@ void describe('IntermediaryCalculation', () => {
 				expectation,
 			] = data_sets[index];
 
-			void it(`IntermediaryNumber.max() behaves with dataset ${index}`, () => {
-				assert.strictEqual(
-					number_implementation.min(
-						...additional_args,
-					).toString(),
-					expectation,
-				);
-			});
+			void it(
+				`IntermediaryNumber.max() behaves with dataset ${
+					index
+				}`,
+				() => {
+					assert.strictEqual(
+						number_implementation.min(
+							...additional_args,
+						).toString(),
+						expectation,
+					);
+				},
+			);
 
-			void it(`IntermediaryCalculation.max() behaves with dataset ${index}`, () => {
-				assert.strictEqual(
-					calculation_implementation.min(
-						...additional_args,
-					).toString(),
-					expectation,
-				);
-			});
+			void it(
+				`IntermediaryCalculation.max() behaves with dataset ${
+					index
+				}`,
+				() => {
+					assert.strictEqual(
+						calculation_implementation.min(
+							...additional_args,
+						).toString(),
+						expectation,
+					);
+				},
+			);
 
 			void it(`TokenScan.max() behaves with dataset ${index}`, () => {
 				assert.strictEqual(
@@ -550,7 +577,7 @@ void describe('IntermediaryCalculation', () => {
 				);
 			});
 		}
-	})
+	});
 
 	void describe('plus', () => {
 		void it('behaves', () => {
@@ -563,7 +590,7 @@ void describe('IntermediaryCalculation', () => {
 			assert.strictEqual(
 				two.plus(IntermediaryNumber.Zero).toString(),
 				'2',
-			)
+			);
 
 			assert.strictEqual(
 				(new IntermediaryCalculation(
@@ -572,9 +599,9 @@ void describe('IntermediaryCalculation', () => {
 					IntermediaryNumber.One,
 				)).plus(two),
 				two,
-			)
-		})
-	})
+			);
+		});
+	});
 
 	void describe('toAmountString', () => {
 		void it('behaves', () => {
@@ -587,14 +614,14 @@ void describe('IntermediaryCalculation', () => {
 			assert.strictEqual(
 				third.toAmountString(),
 				'0.333334',
-			)
+			);
 
 			assert.strictEqual(
 				third.toAmountString(),
 				'0.333334',
-			)
-		})
-	})
+			);
+		});
+	});
 
 	void describe('toFraction', () => {
 		void it('behaves', () => {
@@ -607,14 +634,14 @@ void describe('IntermediaryCalculation', () => {
 			assert.strictEqual(
 				third.toFraction().toString(),
 				'0.(3)',
-			)
+			);
 
 			assert.strictEqual(
 				third.toFraction().toString(),
 				'0.(3)',
-			)
-		})
-	})
+			);
+		});
+	});
 
 	void describe('toJSON', () => {
 		void it('behaves', () => {
@@ -627,13 +654,13 @@ void describe('IntermediaryCalculation', () => {
 			assert.deepStrictEqual(
 				adjusted_zero.toJSON(),
 				IntermediaryNumber.One.toJSON(),
-			)
-		})
-	})
-})
+			);
+		});
+	});
+});
 
 void describe('do_math', () => {
-	const data_sets:[
+	const data_sets: [
 		string,
 		'divide'|'minus'|'modulo'|'plus'|'times',
 		string,
@@ -751,12 +778,12 @@ void describe('do_math', () => {
 					expectation,
 				);
 			},
-		)
+		);
 	}
 });
 
 void describe('abs', () => {
-	const data_sets:[() => operand_types, string][] = [
+	const data_sets: [() => operand_types, string][] = [
 		[
 			() => IntermediaryNumber.create('-1'),
 			'1',
@@ -784,7 +811,7 @@ void describe('abs', () => {
 	];
 
 	for (let index = 0; index < data_sets.length; ++index) {
-		void it (`behaves with data set ${index}`, () => {
+		void it(`behaves with data set ${index}`, () => {
 			const [
 				get_value,
 				expectation,
@@ -804,19 +831,19 @@ void describe('abs', () => {
 				).abs().toString(),
 				expectation,
 			);
-		})
+		});
 	}
 
 	void it('returns IntermediaryNumber.Zero', () => {
 		assert.strictEqual(
 			IntermediaryNumber.Zero.abs(),
 			IntermediaryNumber.Zero,
-		)
-	})
-})
+		);
+	});
+});
 
 void describe('max', () => {
-	const data_sets:[
+	const data_sets: [
 		[
 			math_types,
 			math_types,
@@ -828,7 +855,7 @@ void describe('max', () => {
 			[
 				1,
 				BigNumber(2),
-				new Fraction(3/4),
+				new Fraction(3 / 4),
 				IntermediaryNumber.create('5.6r'),
 				IntermediaryCalculation.fromString('7 - 8 * 9'),
 			],
@@ -841,7 +868,7 @@ void describe('max', () => {
 
 		void it(
 			`IntermediaryNumber max with ${
-				max_args.map(e => e.toString()).join(', ')
+				max_args.map((e) => e.toString()).join(', ')
 			} returns ${
 				expectation
 			}`,
@@ -860,11 +887,11 @@ void describe('max', () => {
 					expectation,
 				);
 			},
-		)
+		);
 
 		void it(
 			`IntermediaryCalculation max with ${
-				max_args.map(e => e.toString()).join(', ')
+				max_args.map((e) => e.toString()).join(', ')
 			} returns ${
 				expectation
 			}`,
@@ -885,12 +912,12 @@ void describe('max', () => {
 					expectation,
 				);
 			},
-		)
+		);
 	}
-})
+});
 
 void describe('CanConvertType', () => {
-	const data_sets:(
+	const data_sets: (
 		| [() => CanConvertType, CanConvertTypeJson]
 		| [
 			() => IntermediaryCalculation,
@@ -941,7 +968,7 @@ void describe('CanConvertType', () => {
 			},
 		],
 		[
-			() => IntermediaryNumber.create(new Fraction(2/3)),
+			() => IntermediaryNumber.create(new Fraction(2 / 3)),
 			{
 				type: 'IntermediaryCalculation',
 				left: {
@@ -1083,7 +1110,7 @@ void describe('CanConvertType', () => {
 		],
 	];
 
-	for (let index=0; index < data_sets.length; ++index) {
+	for (let index = 0; index < data_sets.length; ++index) {
 		const [generator, expectation, resolve_expectation] = data_sets[index];
 
 		void it(
@@ -1093,7 +1120,7 @@ void describe('CanConvertType', () => {
 				JSON.stringify(expectation)
 			}`,
 			() => {
-				let value:CanConvertType|undefined;
+				let value: CanConvertType|undefined;
 
 				const get_value = () => {
 					value = generator();
@@ -1117,6 +1144,6 @@ void describe('CanConvertType', () => {
 					);
 				}
 			},
-		)
+		);
 	}
-})
+});

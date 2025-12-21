@@ -16,10 +16,7 @@ Intermediary Number classes & utilities for the [Production Calculator](https://
 
 1. Checkout locally
 1. Load in devcontainer-supporting IDE
-    - devcontainer setup should automatically run `make install`
-    - `NODE_OPTIONS` env var may require opening a fresh terminal if you
-      receieve an error along the lines of
-      `TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension ".ts"`
+    - devcontainer setup should automatically run `npm install`
 1. Run `make generate`
 
 ## Documentation

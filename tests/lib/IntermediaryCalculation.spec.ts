@@ -8,7 +8,7 @@ import {
 	IntermediaryCalculation,
 	IntermediaryNumber,
 	IntermediaryNumberInfinity,
-} from '../../index';
+} from '../../index.ts';
 import Fraction from 'fraction.js';
 
 void describe('IntermediaryCalculation', () => {
@@ -21,12 +21,12 @@ void describe('IntermediaryCalculation', () => {
 					IntermediaryNumber.One,
 				)).toStringCalculation(),
 				'1 + 1',
-			)
-		})
-	})
+			);
+		});
+	});
 
 	void describe('fromString, toString, toStringCalculation', () => {
-		const data_sets:[string, string, string][] = [
+		const data_sets: [string, string, string][] = [
 			['1+1', '1 + 1', '2'],
 			['1+2/3', '(1 + 2) / 3', '1'],
 			['1+(2/3)', '1 + (2 / 3)', '1.(6)'],
@@ -54,21 +54,21 @@ void describe('IntermediaryCalculation', () => {
 					assert.strictEqual(
 						from_string.toStringCalculation(),
 						expectation_calculation,
-					)
+					);
 
 					assert.strictEqual(
 						from_string.toString(),
 						expectation_resolve,
-					)
+					);
 
 					assert.strictEqual(
 						from_string.toString(),
 						from_string.resolve().toString(),
-					)
+					);
 				},
-			)
+			);
 		}
-	})
+	});
 
 	void describe('require_is', () => {
 		void it('behaves', () => {
@@ -82,8 +82,8 @@ void describe('IntermediaryCalculation', () => {
 			);
 
 			assert.throws(() => IntermediaryCalculation.require_is(undefined));
-		})
-	})
+		});
+	});
 
 	void describe('resolve', () => {
 		void it('behaves', () => {
@@ -103,4 +103,4 @@ void describe('IntermediaryCalculation', () => {
 			);
 		});
 	});
-})
+});

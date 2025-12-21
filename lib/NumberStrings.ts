@@ -1,35 +1,37 @@
-import {
+import type {
 	integer_string__type,
+	StringPassedRegExp,
+} from './Docs.json.ts';
+import {
 	is_string,
 	NotAnAmountString,
-	StringPassedRegExp,
-} from './Docs.json';
+} from './Docs.json.ts';
 import BigNumber from 'bignumber.js';
 import Fraction from 'fraction.js';
 import type {
 	operand_types,
-} from './IntermediaryNumber';
+} from './IntermediaryNumber.ts';
 
-export type amount_string =
+export type amount_string = (
 	| StringPassedRegExp<'^\\d+(?:\\.\\d{1,6})?$'>
 	| integer_string__type
 	| '1'
-	| '0';
+	| '0'
+);
 
-export type numeric_string =
+export type numeric_string = (
 	| amount_string
 	| StringPassedRegExp<'^-?(?:\\d*\\.\\d+|\\d+(?:\\.\\d+)?)$'>
+);
 
-export class NumberStrings
-{
-	static amount_string(maybe:string): amount_string
-	{
+export class NumberStrings {
+	static amount_string(maybe: string): amount_string {
 		this.throw_if_not_amount_string(maybe);
 
 		return maybe;
 	}
 
-	static is_amount_string(maybe:unknown): maybe is amount_string {
+	static is_amount_string(maybe: unknown): maybe is amount_string {
 		return (
 			is_string(maybe)
 			&& (
@@ -42,8 +44,8 @@ export class NumberStrings
 	}
 
 	static is_numeric_string(
-		maybe:unknown,
-	) : maybe is numeric_string {
+		maybe: unknown,
+	): maybe is numeric_string {
 		return (
 			this.is_amount_string(maybe)
 			|| (
@@ -59,7 +61,7 @@ export class NumberStrings
 			| Fraction
 			| operand_types,
 	): amount_string {
-		let result:string;
+		let result: string;
 
 		number = (
 			(number instanceof BigNumber)
@@ -95,8 +97,7 @@ export class NumberStrings
 		return result as amount_string;
 	}
 
-	private static configure()
-	{
+	private static configure() {
 		BigNumber.set({
 			DECIMAL_PLACES: 7,
 			ROUNDING_MODE: BigNumber.ROUND_HALF_CEIL,
@@ -104,7 +105,7 @@ export class NumberStrings
 	}
 
 	private static throw_if_not_amount_string(
-		maybe:string,
+		maybe: string,
 	): asserts maybe is amount_string {
 		if (
 			!this.is_amount_string(maybe)

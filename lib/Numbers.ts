@@ -1,36 +1,40 @@
 import assert from 'assert';
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 import Fraction from 'fraction.js';
-import {
-	IntermediaryNumber,
+
+import type {
 	math_types,
 	operand_types,
-} from './IntermediaryNumber';
+} from './IntermediaryNumber.ts';
 import {
-	amount_string,
-} from './NumberStrings';
+	IntermediaryNumber,
+} from './IntermediaryNumber.ts';
 
-export type number_arg =
+import type {
+	amount_string,
+} from './NumberStrings.ts';
+
+export type number_arg = (
 	| BigNumber
 	| number
-	| amount_string;
+	| amount_string
+);
 
-export class Numbers
-{
+export class Numbers {
 	static divide_if_not_one(
-		left:math_types,
-		right:Fraction,
-		require_fraction:true
+		left: math_types,
+		right: Fraction,
+		require_fraction: true
 	): Fraction;
 	static divide_if_not_one(
-		left:math_types,
-		right:Fraction,
-		require_fraction:false
+		left: math_types,
+		right: Fraction,
+		require_fraction: false
 	): Fraction|math_types;
 	static divide_if_not_one(
-		left:math_types,
-		right:Fraction,
-		require_fraction:boolean,
+		left: math_types,
+		right: Fraction,
+		require_fraction: boolean,
 	): Fraction|math_types {
 		const result = (0 === right.compare(1))
 			? left
@@ -46,7 +50,7 @@ export class Numbers
 	}
 
 	static least_common_multiple_deferred(
-		numbers:[
+		numbers: [
 			(
 				| number_arg
 				| operand_types
@@ -58,7 +62,7 @@ export class Numbers
 			...(
 				| number_arg
 				| operand_types
-			)[]
+			)[],
 		],
 	): (
 		| Fraction
@@ -76,8 +80,9 @@ export class Numbers
 		}
 
 		return (numbers.map(
-			e => IntermediaryNumber.reuse_or_create(e).toFraction(),
+			(e) => IntermediaryNumber.reuse_or_create(e).toFraction(),
 		).reduce(
+
 			// based on https://www.npmjs.com/package/mlcm?activeTab=code
 			(was, is) => {
 				return was.mul(is).abs().div(
@@ -88,9 +93,9 @@ export class Numbers
 	}
 
 	static sum_series_fraction(
-		a:Fraction,
-		b:Fraction,
-	) : Fraction {
+		a: Fraction,
+		b: Fraction,
+	): Fraction {
 		assert.strictEqual(
 			b.compare(a),
 			-1,
@@ -103,7 +108,7 @@ export class Numbers
 
 		const divisor = a.div(b);
 
-		function calculate(number:Fraction) {
+		function calculate(number: Fraction) {
 			let previous = number;
 
 			return () => {
@@ -111,12 +116,12 @@ export class Numbers
 				previous = next;
 
 				return next;
-			}
+			};
 		}
 
 		const generator = calculate(a);
 
-		let next_term:Fraction;
+		let next_term: Fraction;
 		let result = a;
 
 		do {
@@ -127,7 +132,7 @@ export class Numbers
 				-1 === tolerance.mul(result).abs().compare(next_term.abs())
 			)
 			&& --counter
-		)
+		);
 
 		return result;
 	}

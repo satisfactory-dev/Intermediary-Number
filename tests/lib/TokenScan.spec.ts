@@ -7,28 +7,34 @@ import {
 	not_undefined,
 } from '@satisfactory-dev/custom-assert';
 
-import {
+import type {
 	CanDoMathWithDispose_operator_types,
+	math_types,
+	operation_types,
+} from '../../lib/IntermediaryNumber.ts';
+import {
 	IntermediaryCalculation,
 	IntermediaryNumber,
 	is_operation_value,
-	math_types,
-	operation_types,
 	TokenScan,
-} from '../../lib/IntermediaryNumber';
+} from '../../lib/IntermediaryNumber.ts';
+
+import type {
+	from_string_data_set,
+} from '../utilities/expand-string-parsing.ts';
 import {
 	expand_fraction_string,
 	expand_ignore_characters,
-	from_string_data_set,
 	random_ignore_string,
-} from '../utilities/expand-string-parsing';
+} from '../utilities/expand-string-parsing.ts';
+
 import BigNumber from 'bignumber.js';
 import Fraction from 'fraction.js';
 import {
 	is_string,
-} from '../../lib/Docs.json';
+} from '../../lib/Docs.json.ts';
 
-const from_string_data_sets:from_string_data_set[] = [
+const from_string_data_sets: from_string_data_set[] = [
 	[
 		'1',
 		'IntermediaryNumber',
@@ -122,7 +128,7 @@ const from_string_data_sets:from_string_data_set[] = [
 	]),
 	[
 		// this caused issues with the old DeferredCalculation implementation
-		// eslint-disable-next-line max-len
+		// eslint-disable-next-line @stylistic/max-len, @stylistic/no-tabs
 		'((((120 			   	*		 		  	   		 	 	 		  			   							 	 		  						.972322)	 		 		 		   	    	   	 	    		    		  	  			  	 					   	 	 	* 	  		  	   	  		 		 	 			 	   	3)+((120	  	  	 		  	 	 		  		 	 	 	 		  	  		  	 		 	 	   	 						   	 *				   	 			 	 	 		    1)			 	   	  			  	 				 	*					 			1))/3)',
 		'IntermediaryCalculation',
 		'IntermediaryCalculation / amount_string',
@@ -130,7 +136,7 @@ const from_string_data_sets:from_string_data_set[] = [
 	],
 	[
 		// this caused issues with the old DeferredCalculation implementation
-		// eslint-disable-next-line max-len
+		// eslint-disable-next-line @stylistic/max-len, @stylistic/no-tabs
 		'((((120  			  						  	      	  	 	  			 	 				  			  		*  	 			 			 		 				  	 	  	.972322)      		 				  	  			    		  	   	    		  	   	 	     	 		 			 	 		  			   		 		 	 	  		      	 	*	  			   	   	 	   			  	 	  	 	  		 	 	3)+((120				 							 	 			 	* 	  			     			  	    	   	 					   	  	 	1) 					 				    			 		  		 		  	 		 	  				 	   	  * 		 			  				 		 	     	     	  						 			   	  	 		      		  			 		 	  		 		   			 	          		 	1))/3)',
 		'IntermediaryCalculation',
 		'IntermediaryCalculation / amount_string',
@@ -193,7 +199,7 @@ const from_string_data_sets:from_string_data_set[] = [
 	]),
 ];
 
-const from_string_data_sets_throwing:[
+const from_string_data_sets_throwing: [
 	string,
 ][] = [
 	[''],
@@ -206,11 +212,11 @@ const from_string_data_sets_throwing:[
 void describe('is_operation_value', () => {
 	void it('throws', () => {
 		assert.throws(() => {
-			is_operation_value('lolnope')
-		})
-	})
+			is_operation_value('lolnope');
+		});
+	});
 
-	const data_sets:[operation_types][] = [
+	const data_sets: [operation_types][] = [
 		['%'],
 		['*'],
 		['+'],
@@ -224,9 +230,9 @@ void describe('is_operation_value', () => {
 	] of data_sets) {
 		void it(`does not throw for ${operation}`, () => {
 			assert.doesNotThrow(() => {
-				is_operation_value(operation)
-			})
-		})
+				is_operation_value(operation);
+			});
+		});
 	}
 });
 
@@ -248,7 +254,7 @@ void describe('TokenScan', () => {
 						false,
 					);
 				},
-			)
+			);
 		}
 
 		for (const [
@@ -261,7 +267,13 @@ void describe('TokenScan', () => {
 				raw_input_string,
 				`${random_ignore_string()}${raw_input_string}`,
 				`${raw_input_string}${random_ignore_string()}`,
-				`${random_ignore_string()}${raw_input_string}${random_ignore_string()}`,
+				`${
+					random_ignore_string()
+				}${
+					raw_input_string
+				}${
+					random_ignore_string()
+				}`,
 			]) {
 				const scan = TokenScan.create(input_string);
 
@@ -279,7 +291,7 @@ void describe('TokenScan', () => {
 								false,
 							);
 						},
-					)
+					);
 				} else {
 					not_undefined(expected_type_info);
 					void it(
@@ -308,14 +320,14 @@ void describe('TokenScan', () => {
 								expected_result_string,
 							);
 						},
-					)
+					);
 				}
 			}
 		}
-	})
+	});
 
 	void describe('CanResolveMathWithDispose', () => {
-		const data_sets:(
+		const data_sets: (
 			| [
 				string,
 				[
@@ -326,6 +338,7 @@ void describe('TokenScan', () => {
 					| 'toBigNumberOrFraction'
 					| 'toFraction'
 					| 'toString'
+					// eslint-disable-next-line @stylistic/comma-dangle
 					| 'toStringCalculation'
 				],
 				string,
@@ -345,9 +358,9 @@ void describe('TokenScan', () => {
 				[
 					'do_math_then_dispose',
 					CanDoMathWithDispose_operator_types,
-					math_types
+					math_types,
 				],
-				string
+				string,
 			]
 			| [
 				string,
@@ -419,7 +432,7 @@ void describe('TokenScan', () => {
 					0 === additional_args.length
 						? ''
 						: additional_args.map(
-							e => JSON.stringify(e),
+							(e) => JSON.stringify(e),
 						).join(', ')
 				}).toString() === ${
 					expectation
@@ -432,7 +445,7 @@ void describe('TokenScan', () => {
 						'input not valid!',
 					);
 
-					let result:unknown;
+					let result: unknown;
 
 					if (
 						'abs' === method
@@ -523,6 +536,7 @@ void describe('TokenScan', () => {
 							|| 'number' === typeof result
 						),
 						true,
+						// eslint-disable-next-line @stylistic/max-len
 						`Expecting either a boolean, string, number, or an appropriate class instance, received ${
 							undefined === result
 								? 'undefined'
@@ -550,12 +564,12 @@ void describe('TokenScan', () => {
 						expectation,
 					);
 				},
-			)
+			);
 		}
-	})
+	});
 
 	void describe('toJSON', () => {
-		const data_sets:[
+		const data_sets: [
 			string|TokenScan,
 			{
 				type: 'TokenScan',
@@ -573,7 +587,7 @@ void describe('TokenScan', () => {
 			],
 		];
 
-		for (let index=0; index < data_sets.length; ++index) {
+		for (let index = 0; index < data_sets.length; ++index) {
 			const [
 				input,
 				expectation_json,
@@ -628,12 +642,12 @@ void describe('TokenScan', () => {
 					from_json.toJSON(),
 					expectation_json,
 				);
-			})
+			});
 		}
-	})
+	});
 
 	void describe('toStringCalculation', () => {
-		const data_sets:[
+		const data_sets: [
 			string,
 			CanDoMathWithDispose_operator_types,
 			math_types,
@@ -670,27 +684,27 @@ void describe('TokenScan', () => {
 						`Expecting TokenScan.create(${
 							JSON.stringify(input)
 						}).valid === true`,
-					)
+					);
 
 					const altered = scan[operation](argument);
 
 					assert.strictEqual(
 						altered.toStringCalculation(),
 						expectation,
-					)
+					);
 
 					if (input === expectation) {
 						assert.strictEqual(
 							scan,
 							altered,
-							// eslint-disable-next-line max-len
+							// eslint-disable-next-line @stylistic/max-len
 							'If input equals expectation, scan and altered should be the same instance!',
-						)
+						);
 					}
 				},
-			)
+			);
 		}
-	})
+	});
 
 	void describe('require_is', () => {
 		void it('behaves', () => {
@@ -704,6 +718,6 @@ void describe('TokenScan', () => {
 			);
 
 			assert.throws(() => TokenScan.require_is(undefined));
-		})
-	})
-})
+		});
+	});
+});

@@ -1,7 +1,6 @@
 // exports from Docs.json.ts not really warranting their own package
 
-export class NotAnAmountString extends Error
-{}
+export class NotAnAmountString extends Error {}
 
 export type StringPassedRegExp<
 	pattern extends string,

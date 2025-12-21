@@ -4,9 +4,10 @@ import {
 import {
 	run,
 } from 'node:test';
+
 import {
 	glob,
-} from 'glob';
+} from 'fs/promises';
 
 const __dirname = import.meta.dirname;
 
@@ -14,12 +15,16 @@ const ac = new AbortController();
 
 const [,, from_args] = process.argv;
 
-const all_tests = await glob(`${__dirname}/tests/**/*.spec.ts`);
+const all_tests: string[] = [];
+
+for await(const filepath of glob(`${__dirname}/tests/**/*.spec.ts`)) {
+	all_tests.push(filepath);
+}
 
 const files = (from_args || '').split(' ').filter(
-	maybe => maybe.startsWith('tests/') && maybe.endsWith('.spec.ts'),
-).map(e => `${__dirname}/${e}`).filter(
-	maybe => all_tests.includes(maybe),
+	(maybe) => maybe.startsWith('tests/') && maybe.endsWith('.spec.ts'),
+).map((e) => `${__dirname}/${e}`).filter(
+	(maybe) => all_tests.includes(maybe),
 );
 
 let already_stopped = false;

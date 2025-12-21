@@ -8,11 +8,13 @@ import {
 	is_instanceof,
 } from '@satisfactory-dev/custom-assert';
 
-import {
+import type {
 	math_types,
 	number_arg,
+} from '../../index.ts';
+import {
 	Numbers,
-} from '../../index';
+} from '../../index.ts';
 
 void describe('Numbers', () => {
 	void describe('divide_if_not_one', () => {
@@ -82,12 +84,12 @@ void describe('Numbers', () => {
 						expectation,
 					);
 				},
-			)
+			);
 		}
-	})
+	});
 
 	void describe('least_common_multiple_deferred', () => {
-		const data_set:[
+		const data_set: [
 			[number_arg, number_arg, ...number_arg[]],
 			string,
 		][] = [
@@ -119,9 +121,9 @@ void describe('Numbers', () => {
 						0,
 					);
 				},
-			)
+			);
 		}
-	})
+	});
 
 	void describe('sum_series_fraction', () => {
 		void it('throws if a is less than or equal to b', () => {
@@ -133,13 +135,13 @@ void describe('Numbers', () => {
 				new Fraction(0.5),
 				new Fraction(1),
 			));
-		})
+		});
 
-		const data_sets:[Fraction, Fraction, Fraction][] = [
+		const data_sets: [Fraction, Fraction, Fraction][] = [
 			[
 				new Fraction(1),
 				new Fraction(0.25),
-				new Fraction(4/3),
+				new Fraction(4 / 3),
 			],
 		];
 
@@ -164,7 +166,7 @@ void describe('Numbers', () => {
 						0,
 					);
 				},
-			)
+			);
 		}
-	})
-})
+	});
+});

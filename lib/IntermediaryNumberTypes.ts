@@ -1,23 +1,26 @@
-import BigNumber from "bignumber.js";
-import Fraction from "fraction.js";
+import type BigNumber from 'bignumber.js';
+import type Fraction from 'fraction.js';
 
-import {
+import type {
 	numeric_string,
-} from './NumberStrings';
+} from './NumberStrings.ts';
 
-export type input_types =
+export type input_types = (
 	| BigNumber
 	| Fraction
 	| number
-	| string;
+	| string
+);
 
-export type value_types =
+export type value_types = (
 	| BigNumber
 	| Fraction
-	| numeric_string;
+	| numeric_string
+);
 
-export type type_property_types =
+export type type_property_types = (
 	| 'BigNumber'
 	| 'Fraction'
 	| 'amount_string'
-	| 'numeric_string';
+	| 'numeric_string'
+);

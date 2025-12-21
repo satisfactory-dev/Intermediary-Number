@@ -11,10 +11,10 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - name: Use Node.js 21.x
+            - name: Use Node.js 24.x
               uses: actions/setup-node@v4
               with:
-                  node-version: 21.x
+                  node-version: 24.x
                   cache: 'npm'
             - run: npm ci
             - run: ./node_modules/.bin/tsc --project ./tsconfig.app-check.json
@@ -25,16 +25,14 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - name: Use Node.js 21.x
+            - name: Use Node.js 24.x
               uses: actions/setup-node@v4
               with:
-                  node-version: 21.x
+                  node-version: 24.x
                   cache: 'npm'
             - run: npm ci
             - name: Generate coverage
-              run: ./node_modules/.bin/c8 --config=./.c8rc.coveralls.json ./node_modules/.bin/ts-node ./tests.ts
-              env:
-                  NODE_OPTIONS: '--enable-source-maps --no-warnings=ExperimentalWarning --loader ts-node/esm'
+              run: ./node_modules/.bin/c8 --config=./.c8rc.coveralls.json node ./tests.ts
             - name: Coveralls GitHub Action
               uses: coverallsapp/github-action@v2.2.3
               with:

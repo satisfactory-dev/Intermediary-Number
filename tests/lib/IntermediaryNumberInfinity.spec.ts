@@ -3,15 +3,18 @@ import {
 	it,
 } from 'node:test';
 import assert from 'node:assert/strict';
+
+import type {
+	math_types,
+} from '../../lib/IntermediaryNumber.ts';
 import {
 	IntermediaryNumber,
 	IntermediaryNumberInfinity,
-	math_types,
-} from '../../lib/IntermediaryNumber';
+} from '../../lib/IntermediaryNumber.ts';
 
 void describe('IntermediaryNumberInfinity', () => {
 	void describe('compare', () => {
-		const data_sets:[
+		const data_sets: [
 			math_types,
 			IntermediaryNumber|IntermediaryNumberInfinity,
 			0|1|-1,
@@ -31,12 +34,21 @@ void describe('IntermediaryNumberInfinity', () => {
 			expectation,
 		] of data_sets) {
 			const remapped = IntermediaryNumber.reuse_or_create(a);
-			void it(`${remapped.toString()} <=> ${b.toString()} === ${expectation}`, () => {
-				assert.strictEqual(
-					remapped.compare(b),
-					expectation,
-				);
-			})
+			void it(
+				`${
+					remapped.toString()
+				} <=> ${
+					b.toString()
+				} === ${
+					expectation
+				}`,
+				() => {
+					assert.strictEqual(
+						remapped.compare(b),
+						expectation,
+					);
+				},
+			);
 		}
 	});
 });

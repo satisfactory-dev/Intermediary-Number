@@ -5,16 +5,18 @@ import {
 import assert from 'node:assert/strict';
 import {
 	NumberStrings,
-} from '../../lib/NumberStrings';
+} from '../../lib/NumberStrings.ts';
 import BigNumber from 'bignumber.js';
 
+import type {
+	number_arg,
+	operand_types,
+} from '../../index.ts';
 import {
 	IntermediaryCalculation,
 	IntermediaryNumber,
-	number_arg,
-	operand_types,
 	TokenScan,
-} from '../../index';
+} from '../../index.ts';
 
 void describe('NumberStrings', () => {
 	void describe('amount_string', () => {
@@ -53,14 +55,14 @@ void describe('NumberStrings', () => {
 						assert.throws(get_result, expectation);
 					}
 				},
-			)
+			);
 		}
-	})
+	});
 
 	void describe('round_off', () => {
-		const data_sets:[number_arg|operand_types, string][] = [
+		const data_sets: [number_arg|operand_types, string][] = [
 			[22.50000001, '22.5'],
-			[20/65, '0.307693'],
+			[20 / 65, '0.307693'],
 			[BigNumber('22.00000001'), '22'],
 			[BigNumber('22.0000001'), '22.000001'],
 			[BigNumber('22.000001'), '22.000001'],
@@ -94,9 +96,9 @@ void describe('NumberStrings', () => {
 								: BigNumber(input),
 						),
 						expectation,
-					)
+					);
 				},
-			)
+			);
 		}
-	})
-})
+	});
+});
