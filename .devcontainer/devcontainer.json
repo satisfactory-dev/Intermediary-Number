@@ -1,10 +1,10 @@
 {
 	"name": "Intermediary Number",
-	"build": {
-		"dockerfile": "Dockerfile"
-	},
+	"dockerComposeFile": "./docker-compose.yml",
+	"service": "devcontainer",
+	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 	"postCreateCommand": "npm config set git-tag-version=false && npm install && echo \"source ./.devcontainer/.post-create\" >> /home/node/.bashrc",
-	"remoteUser": "node",
+	"remoteUser": "vscode",
 	"updateRemoteUserUID": true,
 	"customizations": {
 		"vscode": {
@@ -14,7 +14,15 @@
 				"github.vscode-github-actions",
 				"ms-azuretools.vscode-docker",
 				"ms-vscode.makefile-tools"
-			]
+			],
+			"settings": {
+				"chat.agent.enabled": false
+			}
+		}
+	},
+	"features": {
+		"ghcr.io/devcontainers/features/node:1": {
+			"version": "22"
 		}
 	}
 }
