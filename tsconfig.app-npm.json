@@ -1,6 +1,7 @@
 {
 	"extends": "./tsconfig.app",
 	"compilerOptions": {
+		"declaration": true,
 		"sourceMap": false
 	}
 }
