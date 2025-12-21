@@ -8,8 +8,12 @@
 		"url": "git+https://github.com/SignpostMarv/Intermediary-Number.git"
 	},
 	"funding": "https://github.com/SignpostMarv/Intermediary-Number?sponsor=1",
-	"exports": "./index.js",
-	"types": "./index.d.ts",
+	"exports": {
+		".": {
+			"types": "./index.d.ts",
+			"default": "./index.js"
+		}
+	},
 	"devDependencies": {
 		"@satisfactory-dev/custom-assert": "^0.2.3",
 		"@signpostmarv/eslint-config": "^0.5.0",
