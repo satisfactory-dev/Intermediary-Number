@@ -3,5 +3,5 @@
 	"report-dir": "./coverage",
 	"all": true,
 	"include": ["assert", "lib"],
-	"exclude": ["./*.ts", "./**/*.d.ts"]
+	"exclude": ["./*.js", "./**/*.d.ts", "./**/*.js"]
 }
