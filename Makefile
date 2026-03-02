@@ -30,7 +30,7 @@ tests:
 
 .PHONY: coverage
 coverage: build
-	@./node_modules/.bin/c8 node --test
+	@node --experimental-test-coverage --test
 
 npm-prep: tests
 	@echo 'building from ./tsconfig.app-npm.json'
