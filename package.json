@@ -31,7 +31,7 @@
 		"typescript-eslint": "^8.56.1"
 	},
 	"dependencies": {
-		"bignumber.js": "^9.1.2",
+		"bignumber.js": "^10.0.2",
 		"fraction.js": "^5.3.4"
 	}
 }
