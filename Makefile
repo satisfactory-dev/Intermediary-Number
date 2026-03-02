@@ -26,17 +26,11 @@ lint: lint--prettier lint--tsc lint--eslint
 
 .PHONY: tests
 tests:
-	@node ./tests.ts
-
-tests--only-unstaged: build
-	@node ./tests--only-these.ts '$(shell git diff HEAD --name-only)'
+	@node --test
 
 .PHONY: coverage
 coverage: build
-	@./node_modules/.bin/c8 node ./tests.ts
-
-coverage--only-unstaged: build
-	@./node_modules/.bin/c8 node ./tests--only-these.ts '$(shell git diff HEAD --name-only)'
+	@./node_modules/.bin/c8 node --test
 
 npm-prep: tests
 	@echo 'building from ./tsconfig.app-npm.json'
