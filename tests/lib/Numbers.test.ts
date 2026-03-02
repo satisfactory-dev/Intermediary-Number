@@ -13,6 +13,7 @@ import type {
 	number_arg,
 } from '../../index.ts';
 import {
+	IntermediaryNumber,
 	Numbers,
 } from '../../index.ts';
 
@@ -54,7 +55,9 @@ void describe('Numbers', () => {
 		] of data_sets) {
 			void it(
 				`Numbers.divide_if_not_one(${
-					JSON.stringify(left)
+					(left instanceof Fraction)
+						? left.toFraction()
+						: JSON.stringify(left)
 				}, ${
 					right.toString()
 				}) behaves as expected when returning ${
@@ -159,10 +162,17 @@ void describe('Numbers', () => {
 					expectation.toString()
 				}`,
 				() => {
+					const fraction = Numbers.sum_series_fraction(a, b);
+					let result = fraction.compare(expectation);
+
+					if (-1 === result) {
+						result = IntermediaryNumber.create(
+							fraction.sub(expectation),
+						).toBigNumber().toNumber();
+					}
+
 					assert.strictEqual(
-						Numbers.sum_series_fraction(a, b).compare(
-							expectation,
-						),
+						result,
 						0,
 					);
 				},

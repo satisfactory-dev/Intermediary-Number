@@ -32,6 +32,6 @@
 	},
 	"dependencies": {
 		"bignumber.js": "^9.1.2",
-		"fraction.js": "^4.3.7"
+		"fraction.js": "^5.3.4"
 	}
 }
