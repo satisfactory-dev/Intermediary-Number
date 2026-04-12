@@ -328,14 +328,14 @@ void describe('TokenScan', () => {
 
 	void describe('CanResolveMathWithDispose', () => {
 		type no_args = (
-					| 'abs'
-					| 'resolve'
-					| 'toAmountString'
-					| 'toBigNumber'
-					| 'toBigNumberOrFraction'
-					| 'toFraction'
-					| 'toString'
-					| 'toStringCalculation'
+			| 'abs'
+			| 'resolve'
+			| 'toAmountString'
+			| 'toBigNumber'
+			| 'toBigNumberOrFraction'
+			| 'toFraction'
+			| 'toString'
+			| 'toStringCalculation'
 		);
 
 		const data_sets: (
