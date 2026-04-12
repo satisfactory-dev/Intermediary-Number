@@ -327,10 +327,7 @@ void describe('TokenScan', () => {
 	});
 
 	void describe('CanResolveMathWithDispose', () => {
-		const data_sets: (
-			| [
-				string,
-				[
+		type no_args = (
 					| 'abs'
 					| 'resolve'
 					| 'toAmountString'
@@ -338,9 +335,13 @@ void describe('TokenScan', () => {
 					| 'toBigNumberOrFraction'
 					| 'toFraction'
 					| 'toString'
-					// eslint-disable-next-line @stylistic/comma-dangle
 					| 'toStringCalculation'
-				],
+		);
+
+		const data_sets: (
+			| [
+				string,
+				[no_args],
 				string,
 			]
 			| [
