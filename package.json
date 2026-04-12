@@ -22,13 +22,12 @@
 	],
 	"devDependencies": {
 		"@satisfactory-dev/custom-assert": "^0.3.0",
-		"@signpostmarv/eslint-config": "^0.8.2",
-		"@types/eslint": "^9.6.1",
+		"@signpostmarv/oxlint-config": "^0.3.1",
 		"@types/node": "^25.6.0",
-		"eslint": "^10.0.2",
+		"oxlint": "^1.59.0",
+		"oxlint-tsgolint": "^0.20.0",
 		"prettier": "^3.8.1",
-		"typescript": "~5.9.2",
-		"typescript-eslint": "^8.56.1"
+		"typescript": "~5.9.2"
 	},
 	"dependencies": {
 		"bignumber.js": "^10.0.2",
