@@ -29,7 +29,7 @@
 		"prettier": "^3.8.1",
 		"typescript": "^6.0.2"
 	},
-	"dependencies": {
+	"peerDependencies": {
 		"bignumber.js": "^10.0.2",
 		"fraction.js": "^5.3.4"
 	}
