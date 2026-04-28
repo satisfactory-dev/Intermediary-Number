@@ -12,6 +12,10 @@
 		".": {
 			"types": "./index.d.ts",
 			"default": "./index.js"
+		},
+		"./Docs.json.ts": {
+			"types": "./lib/Docs.json.d.ts",
+			"default": "./lib/Docs.json.js"
 		}
 	},
 	"files": [
