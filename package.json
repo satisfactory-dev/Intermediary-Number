@@ -5,9 +5,9 @@
 	"license": "Apache-2.0",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/SignpostMarv/Intermediary-Number.git"
+		"url": "git+https://github.com/satisfactory-dev/Intermediary-Number.git"
 	},
-	"funding": "https://github.com/SignpostMarv/Intermediary-Number?sponsor=1",
+	"funding": "https://github.com/satisfactory-dev/Intermediary-Number?sponsor=1",
 	"exports": {
 		".": {
 			"types": "./index.d.ts",
