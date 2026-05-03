@@ -51,4 +51,24 @@ void describe('IntermediaryNumberInfinity', () => {
 			);
 		}
 	});
+
+	void describe('toFraction', () => {
+		void it('always throws', () => {
+			const a = IntermediaryNumberInfinity.Zero;
+			const b = IntermediaryNumberInfinity.One;
+
+			assert.throws(() => a.toFraction());
+			assert.throws(() => b.toFraction());
+		});
+	});
+
+	void describe('toStringCalculation', () => {
+		void it('always returns Infinity', () => {
+			const a = IntermediaryNumberInfinity.Zero;
+			const b = IntermediaryNumberInfinity.One;
+
+			assert.equal(a.toStringCalculation(), 'Infinity');
+			assert.equal(b.toStringCalculation(), 'Infinity');
+		});
+	});
 });
