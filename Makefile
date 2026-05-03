@@ -26,7 +26,10 @@ tests:
 
 .PHONY: coverage
 coverage: build
-	@node --experimental-test-coverage --test
+	@node --experimental-test-coverage --test --test-coverage-exclude '**/**/*.js' --test-coverage-exclude '**/tests/**/*.ts'
+
+coverage--lcov:
+	@node --experimental-test-coverage --test --test-reporter=lcov --test-reporter-destination=coverage/lcov.info --test-coverage-exclude '**/**/*.js' --test-coverage-exclude '**/tests/**/*.ts'
 
 npm-prep: tests
 	@echo 'building from ./tsconfig.app-npm.json'
