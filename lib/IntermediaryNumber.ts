@@ -51,21 +51,27 @@ export type operand_type_property_types = (
 	| 'TokenScan'
 );
 
-export type CanConvertTypeJson = (
-	| {
+export type IntermediaryNumberJson = {
 		type: 'IntermediaryNumber',
 		value: string,
-	}
-	| {
+};
+
+export type IntermediaryCalculationJson = {
 		type: 'IntermediaryCalculation',
 		left: CanConvertTypeJson,
 		operation: operation_types,
 		right: CanConvertTypeJson,
-	}
-	| {
+};
+
+export type TokenScanJson = {
 		type: 'TokenScan',
 		value: string,
-	}
+};
+
+export type CanConvertTypeJson = (
+	| IntermediaryNumberJson
+	| IntermediaryCalculationJson
+	| TokenScanJson
 );
 
 export type CanDoMathWithDispose_operator_types = (
