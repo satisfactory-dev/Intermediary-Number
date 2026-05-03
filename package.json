@@ -1,6 +1,6 @@
 {
 	"type": "module",
-	"name": "@signpostmarv/intermediary-number",
+	"name": "@satisfactory-dev/intermediary-number",
 	"description": "intermediary number & calculator classes for SignpostMarv's Docs.json.ts-driven production planner",
 	"license": "Apache-2.0",
 	"repository": {
