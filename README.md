@@ -1,5 +1,5 @@
-[![Coverage Status](https://coveralls.io/repos/github/SignpostMarv/Intermediary-Number/badge.svg?branch=main)](https://coveralls.io/github/SignpostMarv/Intermediary-Number?branch=main)
-[![Workflow Status](https://github.com/SignpostMarv/Intermediary-Number/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/SignpostMarv/Intermediary-Number/actions/workflows/node.js.yml?query=branch%3Amain)
+[![Coverage Status](https://coveralls.io/repos/github/satisfactory-dev/Intermediary-Number/badge.svg?branch=main)](https://coveralls.io/github/satisfactory-dev/Intermediary-Number?branch=main)
+[![Workflow Status](https://github.com/satisfactory-dev/Intermediary-Number/actions/workflows/node.js.yml/badge.svg?branch=main)](https://github.com/satisfactory-dev/Intermediary-Number/actions/workflows/node.js.yml?query=branch%3Amain)
 
 # Intermediary Number
 
